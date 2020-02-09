@@ -1,18 +1,126 @@
-ul {
-    list-style-type: none;
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, caption {
     margin: 0;
     padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+
+body {
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    background:#1f1f1f;
 }
 
 .container {
+    margin: 0;
+    background: #1b1b1b;
+}
+
+.container-header {
+    padding: .8em 1.2em;
+    margin-top: 10px;
+    color: rgb(255, 255, 255);
+    max-width: 1200px;
+    margin: auto;
+    background: #1b1b1b;
+}
+
+ul {
+    list-style-type: none;
+    display: flex;
+}
+
+.logo {
+    height: 1.2em;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    
+}
+
+.pages li {
+    /* width: 100px; */
+    margin: auto;
+}
+
+.pages li a{
+    text-decoration: none;
+    color: #fff;
+    padding: 1em 2em;
+}
+
+.pages li a:nth-child(4){
+    padding-right: 0em;
+}
+
+.pages li a:hover {
+    background-color: #000;
+}
+
+.main-body {
+                /* height: 70%; comment
+                padding-top: 50%; */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: white;
+                /* justify-content: center; */
     text-align: center;
+    font-size: 2em;
+                /* font-weight: bold; */
+    transform: translate(-50%, -50%);
+    width: 90%;
 }
 
-.img-construction {
-    width: 200px;
-    padding:  5em;
+/* .main-body {
+    position: absolute;
+    top: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+} */
+
+
+
+ul {
+    justify-content: space-evenly;
 }
 
-.text-construction {
-    padding: 1em;
+/* footer {
+    padding-top: 50%;
+} */
+
+.footer-container {
+    margin: 0;
+    position: absolute;
+    top: 97%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* background-color: #1b1b1b; */
+    color: #fff;
+    font-size: .8em;
+    width: 100%;
+
+    
 }
+
+/* .footer-container ul li{ */
+    /* width: auto; */
+    /* padding-right: em; */
+    /* padding: 1em 1em */
+/* display:table-row; */
+/* } */
+
+/* .footer-container ul li{
+    justify-content: right;
+    text-align: start;
+    vertical-align: middle;
+} */
+
