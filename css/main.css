@@ -34,8 +34,9 @@ ul {
 }
 
 .logo {
-    height: 1.2em;
-    padding-left: 1em;
+    margin-top: -.3em;
+    height: 1.6em;
+    padding-left: .5em;
     padding-right: 1em;
 }
 
