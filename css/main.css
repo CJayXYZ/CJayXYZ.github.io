@@ -21,11 +21,13 @@ body {
 
 .container-header {
     padding: .8em 1.2em;
-    margin-top: 10px;
+    /* padding-top: 1em; */
+    /* margin-top: 1em; */
     color: rgb(255, 255, 255);
     max-width: 1200px;
     margin: auto;
     background: #1b1b1b;
+    border-bottom: none
 }
 
 ul {
@@ -34,9 +36,9 @@ ul {
 }
 
 .logo {
-    margin-top: -.3em;
-    height: 1.6em;
-    padding-left: .5em;
+    margin-top: .4em;
+    height: 1.2em;
+    padding-left: 1em;
     padding-right: 1em;
 }
 
@@ -48,21 +50,34 @@ header {
 
 .pages li {
     /* width: 100px; */
-    margin: auto;
+    margin: auto ;
+    font-size: 1em;
 }
 
 .pages li a{
     text-decoration: none;
     color: #fff;
-    padding: 1em 2em;
+    padding: 2em 3em 1.2em;
 }
 
-.pages li a:nth-child(4){
+/* .pages li a:nth-child(4){
     padding-right: 0em;
+} */
+
+.unselected:hover {
+    background-color: #000;
 }
 
-.pages li a:hover {
+.selected:hover {
+    background-color: rgb(80, 80, 80);
+    /* color: rgb(124, 124, 124); */
     background-color: #000;
+
+}
+
+.selected {
+    background-color: #1f1f1f;
+    /* border-bottom: 1em */
 }
 
 .main-body {
@@ -90,7 +105,7 @@ header {
 
 
 
-ul {
+.footer-container ul {
     justify-content: space-evenly;
 }
 
