@@ -16,7 +16,7 @@ body {
 
 .container {
     margin: 0;
-    background: #1b1b1b;
+    /* background: #c27a7a; */
 }
 
 .container-header {
@@ -26,7 +26,7 @@ body {
     color: rgb(255, 255, 255);
     max-width: 1200px;
     margin: auto;
-    background: #1b1b1b;
+    background: #101010;
     border-bottom: none
 }
 
