@@ -11,7 +11,7 @@ let i = 0
 
 function loop() {
     // wait(1000/i)
-    let tag = document.querySelectorAll('div')[5]
+    let tag = document.querySelector('.terminal')
     tag.innerHTML = i
     size = (.1*i) + 'em'
     tag.style.fontSize = size
