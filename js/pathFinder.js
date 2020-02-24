@@ -3,15 +3,16 @@ function print(arg) {
 }
 const canvas = document.querySelector('#pathFinder')
 const ctx = canvas.getContext('2d')
-canvas.width = 800
-canvas.height = 600
+canvas.width = window.innerWidth-100
+canvas.height = window.innerHeight-100
 maxW = canvas.width
 maxH = canvas.height
 let buttonClicked = -1
 let lastLoc
+let canvasLoc = canvas.getBoundingClientRect();
 let pix = 50
 let originShift = -1
-let offset = [pix/2,pix/2]
+let offset = [int((maxW/pix)/2),int((maxH/pix)/2)]
 let movement = [0,0], movementAbs
 let zoomFrom
 let xo, yo, xoff, yoff, pixOld, ri, rj, rextLoc, row, column,cubeX,cubeY
@@ -43,7 +44,6 @@ function makeLine(x1,y1,x2,y2) {
     ctx.shadowColor = 'grey'
     ctx.moveTo(x1,y1)
     ctx.lineTo(x2,y2)
-
     ctx.stroke()
 }
 ctx.strokeStyle = 'white'
@@ -147,8 +147,8 @@ function hover() {
     lastLoc = [event.clientX, event.clientY]
     lastOrigin = origin
     displayGrid()
-    xo = event.clientX-canvas.offsetLeft
-    yo = event.clientY-canvas.offsetTop
+    xo = event.clientX-canvasLoc.x
+    yo = event.clientY-canvasLoc.y
     ctx.fillStyle = 'grey'
     ctx.globalAlpha = 0.4;
     ctx.fillRect(...convertToInnerSquare(...identifier(xo,yo)))
@@ -196,8 +196,8 @@ function releaseGrid() {
 function zoomGrid() {
     ctx.clearRect(0, 0, canvas.width, canvas.height, 50);
     zoomFrom = [event.clientX, event.clientY]
-    xo = zoomFrom[0]-canvas.offsetLeft
-    yo = zoomFrom[1]-canvas.offsetTop
+    xo = zoomFrom[0]-canvasLoc.x
+    yo = zoomFrom[1]-canvasLoc.y
     xoff = offset[0]
     yoff = offset[1]
     pixOld = pix
