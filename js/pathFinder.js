@@ -12,18 +12,17 @@ let lastLoc
 let canvasLoc = canvas.getBoundingClientRect();
 let pix = 50
 let originShift = -1
-let offset = [int((maxW/pix)/2),int((maxH/pix)/2)]
+let offset = [int((maxW%pix)/2),int((maxH%pix)/2)]
 let movement = [0,0], movementAbs
 let zoomFrom
 let xo, yo, xoff, yoff, pixOld, ri, rj, rextLoc, row, column,cubeX,cubeY
 let di = 0, dj = 0
-let pixLimit = [1e-1, 1e4]
+let pixLimit = [1e-1,1e4]
 let origin = offset
 let lastOrigin = origin
 let xmoved = offset[0], ymoved = offset[1]
 let controls = 2
 let gridLineRatio = 1/6
-// let [x,y,w,h] = [0,0,0,0]
 let objectAt
 let wallWidth = gridLineRatio*pix/2;
 let wallLength = pix;
