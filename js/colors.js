@@ -33,7 +33,7 @@ class Colors {
             case 0:
                 this._color = '#13f3ac';
                 this._color = '#8ACA2B';
-                this._color = '#039dfc';
+                this._color = '#9933ff';
                 break;
             case 'randomPan':
                 this.randomPan()
@@ -47,7 +47,62 @@ class Colors {
             case 'amazing':
                 this.amazing();
                 break;
+            case 'start':
+                this.start();
+                break;
+            case 'end':
+                this.end();
+                break;
+            case 'searching':
+                this.color = '#cc9900';
+                break;
+            case 'path':
+                this.color = '#ff4000';
+                break;
+            case 'wall':
+                this.color = '#ff0000';
+                break;
+            case 'test':
+                this.color = '#fff';
+                break;
+            case 'hover':
+                this.color = '#111';
+                break;
         }
+    }
+
+    toAndFro() {
+        // let inc = vectorMultiply(vectorInc(this.colorFinal, this.colorInit), this.speed)
+        // this.colorMoving = vectorSubtract(this.colorMoving, inc);
+        // let i = 0
+        // let bool = (this.colorFinal[i] - this.colorMoving[i]) / (this.colorFinal[i] - this.colorInit[i])
+        // if (0 >= bool) {
+        //     let a = this.colorFinal;
+        //     this.colorFinal = this.colorInit;
+        //     this.colorInit = a;
+        // }
+        this.color = numsToRGB(...this.colorFinal)
+        // console.log(345,bool,  this.colorMoving)
+    }
+
+    start() {
+        if (this.counter < 1) {
+            this.colorFinal = [23, 150, 23]
+            this.colorInit = [0, 0, 0]
+            // console.log(1234, this.colorFinal, this.colorInit)
+        }
+        this.counter = 2;
+        this.toAndFro()
+        // console.log(123)
+    }
+
+    end() {
+        if (this.counter < 1) {
+            this.colorFinal = [50, 50, 255]
+            this.colorInit = [18, 18, 140]
+        }
+        this.counter = 2;
+        this.toAndFro()
     }
 
     randomPan() {
@@ -72,7 +127,7 @@ class Colors {
     }
 
     overCube() {
-        this.color = '#ac13f3'
+        this.color = '#9933ff'
     }
 
     amazing() {
@@ -91,5 +146,9 @@ class Colors {
         // console.log(205,Math.random())
         this.counter = 2;
         
+    }
+
+    __str__() {
+        return 'color'
     }
 }

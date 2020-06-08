@@ -8,13 +8,11 @@ class Grid {
         this.maxColumns = int(this.maxWidth / pix);
         this.maxRows = int(this.maxHeight / pix);
         this.wallWidth = (pix / wallFactor);
-        this.initialOrigin();
-        this.updateOffset();
+        this.initials();
+        this.updateDefaults();
         this.originColumn = 4;
         this.originRow = 2;
         this.cube = new Cube(0, 0);
-        // this.originX = this.originColumn * pix + this.offsetX;
-        // this.originY = this.originRow * pix + this.offsetY;
         this.mouseX = 0;
         this.mouseY = 0;
         this.lastLocX;// = event.clientX;
@@ -22,26 +20,19 @@ class Grid {
         this.lastOriginX;
         this.lastOriginY;
         this.buttonClicked = 0;
+        // this.changeInstance = true;
+        this.mouseLeftClicked = false;
+        this.mouseRightClicked = false;
+        this.mouseLeftClickHold = false;
+        this.mouseRightClickHold = false;
+        this.mouseMoving = false;
+        this.mouseDragging = false;
+        this.mouseHoldingObject = null;
+        this.objectUnderMouse = null;
         // console.log(this.originX, this.originY)
     }
 
-    // get originX() {
-    //     return this._originX;
-    // }
-
-    // get originY() {
-    //     return this._originY;
-    // }
-
-    // set originX(x) {
-    //     this._originX = x;
-    // }
-
-    // set originY(y) {
-    //     this._originY = y;
-    // }
-
-    initialOrigin() {
+    initials() {
         if (this.maxColumns % 2 === 0) {
             this.originX = int(this.maxColumns * pix / 2 + this.offsetX - pix);
         }
@@ -57,9 +48,10 @@ class Grid {
         // console.log(int(this.maxColumns),int(this.maxRows));
     }
 
-    updateOffset() {
-        this.offsetX = this.originX%pix;
-        this.offsetY = this.originY%pix;
+    updateDefaults() {
+        this.offsetX = this.originX % pix;
+        this.offsetY = this.originY % pix;
+        canvasLoc = canvas.getBoundingClientRect();
     }
 
     drawOrigin() {
@@ -74,12 +66,10 @@ class Grid {
         this.defaults();
     }
 
-
     makeLine(x1, y1, x2, y2) {
         ctx.lineWidth = this.wallWidth;
         ctx.strokeStyle = this.lineColor;
         ctx.beginPath()
-        // this.shadow()
         ctx.moveTo(x1, y1)
         ctx.lineTo(x2, y2)
         ctx.stroke()
@@ -99,14 +89,13 @@ class Grid {
     }
 
     draw() {
-        // this.update()
         let x0 = this.offsetX;
         let y0 = this.offsetY;
         let xmax = this.maxWidth;
         let ymax = this.maxHeight;
         let x = -(pix - x0);
         let y = -(pix - y0);
-        // print(ctx.lineWidth)
+        // this.shadow()
         while (x <= xmax + pix) {
             this.makeLine(x, 0, x, ymax)
             x = x + pix
@@ -116,14 +105,11 @@ class Grid {
             y = y + pix
         }
         this.defaults()
-        this.cube.fill.pattern = 1
-        // this.cube.draw();
-        // console.log(this.cube.loc)
     }
 
-
-    newEvent(event) {
+    eventHandler(event) {
         // console.log(event)
+        this.updateDefaults()
         let mouseX = event.clientX - canvasLoc.x;
         let mouseY = event.clientY - canvasLoc.y;
         let type = this.classifier(mouseX, mouseY);
@@ -131,76 +117,181 @@ class Grid {
         if (type === 'cube') {
             instance = cubesManager;
         }
-        else {
+        else if (type === 'wall'){
             instance = wallsManager;
         }
+        else {
+            console.log('something went wrong');
+        }
         // console.log(event.type);
-        // console.log(instance);
         switch (event.type) {
-            // switch ('test') {
-            case 'test':
-                this.offsetX = this.offsetX + pix / 10
-                this.offsetY = this.offsetY + pix / 10
-                this.originX = this.originX + pix / 10
-                this.originY = this.originY + pix / 10
-                break;
-
             case 'click':
-                // console.log(event.button, event)
-                instance.clicked(mouseX, mouseY);
+                // console.log(1, event.button, event)
+                this.click(instance, mouseX, mouseY)
                 break;
 
             case 'mousemove':
-                instance.over(mouseX, mouseY);
-                this.drag(event);
+                // instance.over(mouseX, mouseY)
+                this.mouseMoveHandler(mouseX, mouseY);
                 break;
 
             case 'mouseout':
-                instance.mouseaway(mouseX, mouseY);
+                // instance.mouseaway(mouseX, mouseY);
+                cubesManager.over(mouseX, mouseY)
                 break;
 
             case 'mouseup':
-                this.buttonClicked = -1;
+                this.mouseButtonHandler(event.button, 'up')
                 break;
 
             case 'mousedown':
-                this.buttonClicked = event.button
-                this.lastLocX = event.clientX;
-                this.lastLocY = event.clientY;
-                // this.drag(mouseX, mouseY);
-                // console.log(event.button)
-                this.lastOriginX = this.originX
-                this.lastOriginY = this.originY
-                // if (this.buttonClicked == controls) {
-                //     console.log('draging')
-                // }
-                this.drag(event);
+                this.mouseButtonHandler(event.button, 'down')
                 break;
 
             case 'mousewheel':
+                this.zoom(event);
                 this.lastLocX = event.clientX;
                 this.lastLocY = event.clientY;
-                this.lastOriginX = this.originX
-                this.lastOriginY = this.originY
-                this.zoom(event);
-                
-                // console.log(event)
+                this.lastOriginX = this.originX;
+                this.lastOriginY = this.originY;
+                break;
+
+            case 'resize':
+                break;
+        }
+        this.updateDefaults();
+    }
+
+    mouseResetHandler() {
+        this.mouseLeftClicked = false;
+        this.mouseRightClicked = false;
+        this.mouseLeftClickHold = false;
+        this.mouseRightClickHold = false;
+        this.mouseMoving = false;
+        this.mouseDragging = false;
+        this.objectUnderMouse = null;      
+    }
+
+    objectUnderMouseHandler(x, y) {
+        this.objectUnderMouse = null;
+        let object = this.classifier(x, y);
+        // object = 'cube'
+        switch (object) {
+            case 'cube':
+                let [column, row] = cubesManager.classifier(x,y);
+                if (objectsAreSame([column, row], cubesManager.start.loc)){
+                    this.objectUnderMouse = cubesManager.start;
+                }
+                else if (objectsAreSame([column, row], cubesManager.end.loc)){
+                    this.objectUnderMouse = cubesManager.end;
+                }
+                else {
+                    this.objectUnderMouse = cubesManager;
+                    console.log('1whsy');
+                }
+                break;
+            case 'wall':
+                this.objectUnderMouse = wallsManager;
+                console.log('wallllll');
+                break;
+        }
+        if (this.mouseHoldingObject){
+            this.mouseHoldingObject.over();
+            // cubesManager.over(x,y);
+        }
+        else {
+            // if 
+            // this.objectUnderMouse.over(x, y);
+            cubesManager.over(x,y);
+        }
+    }
+
+    mouseButtonHandler(button, type) {
+        let bool = false;
+        switch (type){
+            case 'up':
+                bool = false;
+                break;
+            case 'down':
+                bool = true;
+                break;
+        }
+        switch (button){
+            case 0:
+                this.mouseLeftClicked = bool;
+                break;
+            case 2:
+                this.mouseRightClicked = bool;
                 break;
         }
     }
 
-    zoom(event){
+    mouseMoveHandler(x, y){
+        this.objectUnderMouseHandler(x, y)
+
+        if (this.mouseRightClicked === true) {
+            this.mouseRightClickHold = true;
+        }
+        else if (this.mouseLeftClicked === true) {
+            this.mouseLeftClickHold = true;
+        }
+        else {
+            this.mouseRightClickHold = false;
+            this.mouseLeftClickHold = false;
+        }
+
+        if (this.mouseLeftClickHold === true){
+            if (!this.mouseHoldingObject){
+                this.mouseHoldingObject = this.objectUnderMouse;
+            }
+            if (this.mouseHoldingObject){
+                if (this.mouseHoldingObject.__str__() !== 'cubesManagers'){
+                    this.mouseHoldingObject.drag(x,y)
+                }
+            }
+        }
+        else if (this.mouseRightClickHold=== true) {
+            this.drag(x, y)
+            this.mouseHoldingObject = null;
+        }
+        else {
+            this.mouseHoldingObject = null;
+        }
+        this.lastLocX = event.clientX;
+        this.lastLocY = event.clientY;
+        this.lastOriginX = this.originX;
+        this.lastOriginY = this.originY;
+        // this.objectUnderMouse.over(x, y);
+    }
+
+    click(instance, mouseX, mouseY) {
+        let obj1 = 'wallsManagers';
+        if (!this.mouseHoldingObject){
+            if (instance.__str__() === obj1){
+                instance.clicked(mouseX, mouseY);
+            }
+            else if (instance.__str__() === 'cubesManager'){
+                instance.clicked(mouseX, mouseY);
+            }
+        }
+    }
+
+    hover(event) {
+
+    }
+
+    zoom(event) {
         // let pixOld = pix
         let x = event.clientX - canvasLoc.x;
         let y = event.clientY - canvasLoc.y;
         let xo = this.originX;
         let yo = this.originY;
-        let dx = x-xo;
-        let dy = y-yo;
+        let dx = x - xo;
+        let dy = y - yo;
         // let xrem = dx%pix;
         // let yrem = dy%pix;
-        let xquo = (dx/pix);
-        let yquo = (dy/pix);
+        let xquo = (dx / pix);
+        let yquo = (dy / pix);
         if (event.deltaY > 0) {
             pix = pix - pix / 10
         } else {
@@ -211,43 +302,53 @@ class Grid {
         } else if (pix > pixLimit[1]) {
             pix = pixLimit[1]
         }
-        this.originX = x - xquo*pix;
-        this.originY = y - yquo*pix;
+        this.originX = x - xquo * pix;
+        this.originY = y - yquo * pix;
         this.wallWidth = (pix / wallFactor);
-        this.updateOffset()
+        // this.updateOffset();
         // this.originX = xo;
         // this.originY= yo;
         // console.log(dx, dy, this.originX, this.originY, event.clientX, event.clientY)
         mainLoop()
     }
-    
-    drag(event) {
-        if (this.buttonClicked == controls) {
-            // console.log('draging')
-            this.originX = this.lastOriginX +(event.clientX - this.lastLocX);
-            this.originY = this.lastOriginY +(event.clientY - this.lastLocY);
-            // console.log(this.originX, (event.clientX), this.lastLocX)
-        }
-        else if (event.buttons === 1) {
-            // console.log(event)
-            let mouseX = event.clientX - canvasLoc.x;
-            let mouseY = event.clientY - canvasLoc.y;
-            let type = this.classifier(mouseX, mouseY);
-            let instance;
-            if (type === 'cube') {
-                instance = cubesManager;
-            }
-            else {
-                instance = wallsManager;
-            }
-            // console.log(1)
-            instance.clicked(mouseX, mouseY);
-        }
-        // console.log(event, this.buttonClicked)
+
+    drag(x, y) {
+        x = x + canvasLoc.x;
+        y = y + canvasLoc.y;
+        this.originX = this.lastOriginX + (x - this.lastLocX);
+        this.originY = this.lastOriginY + (y - this.lastLocY);
+        // this.updateOffset();
     }
 
+    // drag1(event) {
+    //     // cubesManager.start.drag(event.clientX - canvasLoc.x, event.clientY - canvasLoc.y)
+    //     if (this.buttonClicked == controlButton) {
+    //         // console.log('draging')
+    //         this.originX = this.lastOriginX + (event.clientX - this.lastLocX);
+    //         this.originY = this.lastOriginY + (event.clientY - this.lastLocY);
+    //         // console.log(this.originX, (event.clientX), this.lastLocX)
+    //     }
+    //     else if (event.buttons === 1) {
+    //         // console.log(event)
+    //         let mouseX = event.clientX - canvasLoc.x;
+    //         let mouseY = event.clientY - canvasLoc.y;
+    //         let type = this.classifier(mouseX, mouseY);
+    //         let instance;
+    //         // if 
+    //         if (type === 'cube') {
+    //             instance = cubesManager;
+    //         }
+    //         else {
+    //             instance = wallsManager;
+    //         }
+    //         // console.log(1)
+    //         instance.clicked(mouseX, mouseY);
+    //     }
+    //     // console.log(event, this.buttonClicked)
+    // }
+
     classifier(x, y) {
-        this.updateOffset();
+        // this.updateOffset();
         let ret = 'wall';
         let width = this.wallWidth / 2;
         let locX = x - this.offsetX;
@@ -256,22 +357,16 @@ class Grid {
         let remY = int(locY % pix);
         if (remX < 0) { remX = remX + pix }
         if (remY < 0) { remY = remY + pix }
-        // console.log(remX, remY, thick);
-        // if ((thick< remX) | (remX<= (pix-thick)) | (thick< remY) | (remY<= (pix-thick))){
         if ((width < remX) & (remX <= (pix - width)) & ((width < remY) & (remY <= (pix - width)))) {
-            // console.log(0, remX, remY, thick);
             ret = 'cube';
-            wallsManager.mouseaway(x, y);
+            // wallsManager.mouseaway(x, y);
         }
         else {
-            // console.log(1, remX, remY, thick);
             ret = 'wall';
-            cubesManager.mouseaway(x, y);
-            wallsManager.mouseon(x, y);
+            // cubesManager.mouseaway(x, y);
+            // wallsManager.mouseon(x, y);
         }
-        // ret = 'wall';
-        // ret = 'cube';
-        // console.log(ret)
-        return ret;
+        // return ret;
+        return 'cube';
     }
 }

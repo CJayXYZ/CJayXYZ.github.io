@@ -1,0 +1,9 @@
+class Controls {
+    constructor(){
+
+    }
+
+    draw() {
+        
+    }
+}

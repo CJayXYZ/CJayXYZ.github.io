@@ -8,6 +8,7 @@ class Pillar {
         this.startTime = new Time();
         this.fill = new Colors();
         this.width = grid.wallWidth/2;
+        this.globalAlpha = 1;
     }
 
     get originX() {
@@ -61,5 +62,9 @@ class Pillar {
         let k = [x+width, y+ width];
         // console.log(i,j,k)
         return rotateAll([i, j, k],a);
+    }
+
+    __str__() {
+        return 'pillar'
     }
 }

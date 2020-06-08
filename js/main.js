@@ -6,7 +6,6 @@ do { d2 = new Date(); }
 while(d2-d < ms);
 }
 
-
 let i = 0
 
 function loop() {
@@ -19,7 +18,7 @@ function loop() {
     // console.log(i);
     if (i <800 +1) {
     window.requestAnimationFrame(loop) 
-}
+    }
 }
 
 // loop()

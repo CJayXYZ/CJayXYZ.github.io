@@ -1,12 +1,15 @@
 const canvas = document.querySelector('#testLoop');
 const ctx = canvas.getContext('2d');
 let mainOffset = 50;
-canvas.width = window.innerWidth - mainOffset;
-canvas.height = window.innerHeight - mainOffset;
-let maxWidth = canvas.width;
-let maxHeight = canvas.height;
+// canvas.width = window.innerWidth - mainOffset;
+// canvas.height = window.innerHeight - mainOffset;
+let maxWidth = canvas.offsetWidth;
+let maxHeight = canvas.offsetHeight;
+canvas.width = maxWidth;
+canvas.height = maxHeight;
+// console.log(canvas, ctx, maxWidth, maxHeight);
 let t = 0;
-let pix = 75;
+let pix = 20;
 let pixLimit = [1e-1, 1e4]
 let cubes = [];
 let shakeby = 5;
@@ -14,92 +17,120 @@ let stepSize = 33;
 let timer;
 let rate = 1;
 let color_rate = 300;
-let fadeSpeed = .0005;
+let fadeSpeed = .0002;
 let canvasLoc = canvas.getBoundingClientRect();
-let controls= 2;
-let wallFactor = 4;
+let controlButton= 2;
+let wallFactor = 10;
 
-cubes.push(new Cube(600, 200));
-cubes.push(new Cube(100, 20));
 let grid = new Grid();
 let cubesManager = new CubesManager();
 let wallsManager = new WallsManager();
+let controls = new Controls();
+let io = new IO();
+let bfs = new BFS();
+
+let findPathBool = false;
+// let clearSearchCubes = false;
 
 function mainLoop() {
     ctx.clearRect(0, 0, 10000, 10000);
-    grid.draw();
+    // controls.draw();
+    // grid.draw();'
+    // if  (clearSearchCubes){
+    //     clearSearchCubes();
+    //     clearSearchCubes = false;
+    // }
+    if (findPathBool) {
+        io.findPath();
+    }
     wallsManager.draw();
     cubesManager.draw();
     // grid.drawOrigin();
     // test();
 }
+
 function loop() {
     timer = setInterval(mainLoop, stepSize)
 }
 loop()
 
 function update() {
-    canvas.width = window.innerWidth - mainOffset;
-    canvas.height = window.innerHeight - mainOffset;
+    // canvas.width = window.innerWidth - mainOffset;
+    // canvas.height = window.innerHeight - mainOffset;
+    let maxWidth = canvas.offsetWidth;
+    let maxHeight = canvas.offsetHeight;
+    canvas.width = maxWidth;
+    canvas.height = maxHeight;
     grid.maxHeight = canvas.height;
     grid.maxWidth = canvas.width;
+    console.log(grid.maxWidth, grid.maxHeight )
 }
 
+
 canvas.addEventListener('contextmenu', event => event.preventDefault());
+
 canvas.onclick = function (event) {
-    // cubes.push(new Cube(event.clientX-pix/2, event.clientY-pix/2))
     clearInterval(timer)
-    // grid.newEvent('test')
-    grid.newEvent(event)
+    grid.eventHandler(event)
+    mainLoop()
     timer = setInterval(mainLoop, stepSize);
 }
 
 window.onresize = function (event) {
     clearInterval(timer);
     this.update();
-    console.log(1)
+    grid.eventHandler(event);
     mainLoop()
     timer = setInterval(mainLoop, stepSize);
 }
 
 window.onmouseout = function (event) {
     clearInterval(timer);
-    // cubesManager.hoverList.push(new Cube(...cubesManager.overCube.loc))
-    // cubesManager.hoverList.push(cubesManager.overCube)
-    // cubesManager.overCube = null;
-    grid.newEvent(event);
+    grid.eventHandler(event);
     mainLoop();
-    // console.log(event)
     timer = setInterval(mainLoop, stepSize);
 }
 
 window.onmousemove = function (event) {
-    // console.log(event)
     clearInterval(timer);
-    grid.newEvent(event);
+    grid.eventHandler(event);
     mainLoop();
     timer = setInterval(mainLoop, stepSize);
 }
 
 window.onmousedown = function (event) {
     clearInterval(timer)
-    // grid.newEvent('test')
-    grid.newEvent(event)
-    timer = setInterval(mainLoop, stepSize);
-}
-window.onmouseup = function (event) {
-    clearInterval(timer)
-    grid.newEvent(event)
+    grid.eventHandler(event)
+    mainLoop();
     timer = setInterval(mainLoop, stepSize);
 }
 
-window.onmousewheel = function (event) {
+window.onmouseup = function (event) {
     clearInterval(timer)
-    grid.newEvent(event)
+    grid.eventHandler(event)
+    mainLoop();
+    timer = setInterval(mainLoop, stepSize);
+}
+
+canvas.onmousewheel = function (event) {
+    // window.addEventListener('wheel', event => event.preventDefault());
+    event.preventDefault();
+    clearInterval(timer)
+    grid.eventHandler(event)
+    mainLoop();
     timer = setInterval(mainLoop, stepSize);
     print(Math.floor(pix))
 }
-
+window.addEventListener("keyup", function(event) {
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+      // Cancel the default action, if needed
+      event.preventDefault();
+      // Trigger the button element with a click
+      io.deleteSearchCube();
+      findPathBool = true;
+    }
+  });
 
 function test() {
     ctx.fillStyle = '#f00';

@@ -12,9 +12,20 @@ class Wall {
         this.opacityHover = .5;
         ctx.fillStyle = this.fill.color;
         this.pillar = new Pillar();
+        this._wallType = null;
     }
+
     get loc() {
         return [this.column, this.row, this.side]
+    }
+
+    get wallType() {
+        return this._wallType;
+    }
+
+    set wallType(type) {
+        this._wallType = type;
+        this.fill.pattern = type;
     }
 
     update() {
@@ -39,11 +50,12 @@ class Wall {
         ctx.globalAlpha = 1;
         ctx.fillStyle = this.fill.color;
         ctx.fillRect(this.x, this.y, this.width, this.length)
-        this.drawPillar();
+        // this.drawPillar();
     }
     over() {
         this.update();
         ctx.globalAlpha = this.opacityHover;
+        this.wallType = 'wall';
         ctx.fillStyle = this.fill.color;
         ctx.fillRect(this.x, this.y, this.width, this.length)
         this.drawPillar();
@@ -53,5 +65,13 @@ class Wall {
         this.pillar.originX = pix*this.column + grid.originX;
         this.pillar.originY = pix*this.row + grid.originY;
         this.pillar.triangleType(this.side);
+    }
+
+    name() {
+        return listToString(this.loc);
+    }
+
+    __str__() {
+        return 'wall';
     }
 }

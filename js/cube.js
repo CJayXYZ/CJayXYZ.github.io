@@ -9,13 +9,41 @@ class Cube {
         this.startTime = new Time();
         this.fill = new Colors();
         this.state = true;
-        this.opacityHover = .5;
+        this.opacityHover = .3;
         this.cubeLength = 100;
         this._fadeSpeed = fadeSpeed;
+        this._cubeType = null;
+        this.R = null;
+        this.D = null;
+        this.L = null;
+        this.U = null;
+        this.isReached = false;
+        this._locChanged = true;
+        this._lastLoc = null;
+    }
+
+    get cubeType() {
+        return this._cubeType
+    }
+
+    set cubeType(type) {
+        this._cubeType = type;
+        this.fill.pattern = type;
     }
 
     get loc() {
-        return [this.column, this.row]
+        return [this.column, this.row];
+    }
+
+    set loc(x) {
+        this.lastLoc = listToString([this.column, this.row]);
+        if (! objectsAreSame(x, [this.column, this.row])){
+            [this.column, this.row] = x;
+            this.locChanged = true;
+        }else{
+            this.locChanged = false;
+        }
+        // console.log(x)
     }
 
     get fadeSpeed() {
@@ -26,18 +54,45 @@ class Cube {
         this._fadeSpeed = num;
     }
 
+    get lastLoc() {
+        return this._lastLoc;
+    }
+
+    set lastLoc(e) {
+        this._lastLoc = e;
+    }
+
+    get locChanged() {
+        return this._locChanged;
+    }
+
+    set locChanged(bool) {
+        this._locChanged = bool;
+    }
+
     update() {
         this.x = this.column * pix + grid.originX + grid.wallWidth / 2
         this.y = this.row * pix + grid.originY + grid.wallWidth / 2
         this.cubeLength = pix - grid.wallWidth
         // console.log(this.x, this.y, )
     }
+
+    setText() {
+
+    }
+
+    showText() {
+
+    }
+
     draw() {
-        this.update()
-        // this.fill.pattern = 1
-        ctx.fillStyle = this.fill.color;
-        // console.log(this.fill.color)
-        ctx.fillRect(this.x, this.y, this.cubeLength, this.cubeLength);
+        if (this.cubeType){
+            this.update()
+            // this.fill.pattern = 1
+            ctx.fillStyle = this.fill.color;
+            // console.log(this.fill.color)
+            ctx.fillRect(this.x, this.y, this.cubeLength, this.cubeLength);
+        }
     }
     move() {
         ctx.clearRect(this.x, this.y, pix, pix);
@@ -50,7 +105,7 @@ class Cube {
         ctx.fillRect(x, y, pix, pix);
     }
     translate() {
-        let timeElapsed = this.startTime.elapsedTime();
+        let timeElapsed =this.startTime.elapsedTime()/10;
         this.x = this.x + rate * timeElapsed;
         this.y = this.y + rate * timeElapsed;
         let x = this.x;
@@ -59,7 +114,7 @@ class Cube {
     }
     hover() {
         this.update();
-        let timeElapsed = this.startTime.elapsedTime();
+        let timeElapsed = this.startTime.elapsedTime()/10;
         let opacityDelta = timeElapsed * this.fadeSpeed;
         this.opacityHover = this.opacityHover - opacityDelta;
         if (this.opacityHover <= .01) {
@@ -79,5 +134,28 @@ class Cube {
         ctx.fillStyle = this.fill.color;
         ctx.fillRect(this.x, this.y, this.cubeLength, this.cubeLength);
         ctx.globalAlpha = 1;
+    }
+
+    drag(x, y) {
+        let [column, row] = this.classifier(x, y);
+        this.loc = [column, row]
+    }
+
+    delete(x,y) {}
+    
+    classifier(x, y) {
+        let originX = grid.originX;
+        let originY = grid.originY;
+        let column = int((x - originX) / pix);
+        let row = int((y - originY) / pix);
+        return [column, row]
+    }
+
+    name() {
+        return listToString(this.loc);
+    }
+
+    __str__() {
+        return 'cube'
     }
 }

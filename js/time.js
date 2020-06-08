@@ -6,6 +6,6 @@ class Time {
         let endTime = new Date();
         let ret = endTime - this.startTime;
         this.startTime = new Date();
-        return ret/10;
+        return ret;
     }
 }

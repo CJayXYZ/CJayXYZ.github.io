@@ -5,6 +5,8 @@ class WallsManager {
         this.overWall = null;
         this.lastHover = null;
         this.onWall = false;
+        this.allWalls = {};
+        this.selectedWallKeys = new Set();
     }
 
     shadow() {
@@ -23,13 +25,16 @@ class WallsManager {
     draw() {
         this.shadow();
         let all = [];
-        for (let i = 0; i < this.selectedList.length; i++) {
-            this.selectedList[i].fill.speed = .03;
-            // this.selectedList[i].fill.pattern = 'randomPan'
-            // this.selectedList[i].fill.pattern = 0;
-            this.selectedList[i].draw();
-            all.push(this.selectedList[i].loc);
+
+        for (let key of this.selectedWallKeys) {
+            // console.log(key, this.allWalls);
+            // wall = this.allWalls[toString(key)];
+            let wall = this.allWalls[key];
+            // console.log(wall, this.allWalls);
+            // wall.fill.speed = 0.03;
+            wall.draw();
         }
+
         if (this.overWall) {
             // this.overWall.fill.pattern = 'randomFix';
             // this.overWall.fill.pattern = 0;
@@ -38,24 +43,65 @@ class WallsManager {
         this.defaults();
     }
 
+    drag(x,y) {
+        let [column, row, type, side] = this.classifier(x, y);
+        this.clicked(x,y);
+    }
+
+    // delete(x,y) {
+    //     let [column, row, type, side] = this.classifier(x, y);
+    //     if 
+    // }
+
+    add(wall) {
+        // console.log(wall.loc)
+        if (! this.allWalls.has(listToString(wall.loc))){
+            this.allWalls.add(listToString(wall.loc))
+        }
+        console.log(this.allWalls)
+    }
+
+    registerWall(wall, keys) {
+        keys.add(wall.name());
+        this.allWalls[wall.name()] = wall;
+        console.log(keys, this.allWalls)
+    }
+
+    deregisterWall(wall, keys) {
+        keys.delete(wall.name());
+        // this.allWalls[wall.name()] = wall;
+        delete this.allWalls[wall.name()]
+    }
+
     clicked(x, y) {
         let [column, row, type, side] = this.classifier(x, y);
         let wall = this.makeWall(column, row, type, side);
-        if (!(ifin(this.selectedList, wall.loc))) {
-            this.selectedList.push(wall);
+        // console.log(wall);
+        if (wall){
+            if (! this.selectedWallKeys.has(wall.name())){
+                wall.wallType = 'wall';
+                this.registerWall(wall, this.selectedWallKeys);
+            }
         }
-        // this.selectedList.push(wall);
+        else {
+        }
         // console.log([column, row, type, side], this.selectedList)
     }
 
     over(x, y) {
+        if (! this.overWall){
+            this.mouseon(x, y)
+        }
         let [column, row, type, side] = this.classifier(x, y);
+        // console.log(column, row, type, side)
         let wall = this.makeWall(column, row, type, side)
-        this.lastHover = wall.loc;
-        if (! objectsAreSame(this.overWall.loc, wall.loc)){
-            this.overWall = wall;
-            // console.log(column, row, type, side)
-            // this.lastHover = this.overWall.loc;
+        if (wall) {
+            this.lastHover = wall.loc;
+            if (! objectsAreSame(this.overWall.loc, wall.loc)){
+                this.overWall = wall;
+                // console.log(column, row, type, side)
+                // this.lastHover = this.overWall.loc;
+            }
         }
         else {
             // this.overWall = this.makeWall(column, row, side);
@@ -63,7 +109,6 @@ class WallsManager {
             // this.lastHover = this.overWall.loc;
         }
         this.onWall = true;
-        // console.log(column, row, type, side)
     }
 
     makeWall(column, row, type, side){
@@ -107,6 +152,7 @@ class WallsManager {
             this.overWall = null;
         }
         this.onWall = false;
+        // console.log(341)
     }
 
     mouseon(x, y) {
@@ -114,10 +160,44 @@ class WallsManager {
         if (! this.overWall) {
             this.overWall = new Wall(column, row, side);
         }
+        // console.log(12345)
+    }
+
+    isWall(col, row, side) {
+        [col, row, side] = this.exactWall(col, row, side);
+        let name = listToString([col, row, side]);
+        // console.log(wallsManager.allWalls)
+        if (name in this.allWalls) {
+            if (this.allWalls[name].wallType === 'wall') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    exactWall(column, row, side){
+        switch (side){
+            case 'L':
+                side = 'D';
+                break;
+            case 'U':
+                side = 'R';
+                break;
+            case 'R':
+                column = column + 1;
+                side = 'D';
+                break;
+            case 'D':
+                row = row + 1;
+                side = 'R'
+                break;
+        }
+        // console.log(column,row, side)
+        return [column, row, side];
     }
 
     classifier(x, y) {
-        let width = grid.wallWidth/2;
+        let width = grid.wallWidth/2 +1;
         let originX = grid.originX;
         let originY = grid.originY;
         let type = 'wall';
@@ -190,30 +270,8 @@ class WallsManager {
         // console.log(remX, remY);
         return [column, row, side]
     }
+
+    __str__() {
+        return 'wallsManager'
+    }
 }
-
-
-
-// switch (type) {
-//     case 'pillar':
-//         switch (side){
-//             case 'R':
-//                 break;
-//             case 'D':
-//                 break;
-//             case 'L':
-//                 break;
-//             case 'U':
-//                 break;
-//         }
-//         break;
-//     case 'wall':
-//         switch (side){
-//             case 'R':
-//                 break;
-//             case 'D':
-//                 break;
-//         }
-//         break;
-        
-// }

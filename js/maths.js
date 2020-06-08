@@ -133,6 +133,7 @@ function cubeNames(list) {
 }
 
 function objectsAreSame(x, y) {
+
     var objectsAreSame = true;
     for (var propertyName in x) {
         if (x[propertyName] !== y[propertyName]) {
@@ -143,10 +144,10 @@ function objectsAreSame(x, y) {
     return objectsAreSame;
 }
 
-function ifin(list, value) {
+function ifin(list, cube) {
     var ret = false;
     for (let i = 0; i < list.length; i++) {
-        ret = objectsAreSame(list[i].loc, value);
+        ret = objectsAreSame(list[i].loc, cube.loc);
         // console.log(list[i], value);
         if (ret === true) {
             break;
@@ -154,6 +155,16 @@ function ifin(list, value) {
     }
     // console.log(22)
     return ret;
+}
+
+function hash(list) {
+    let product = 1;
+    let add = 0;
+    for (let i = 0; i < list.length; i++) {
+        product = list[i] * product
+        add = list[i] + add
+    }
+    return product + add
 }
 
 function equationOfLine(x1, y1, x2, y2) {
@@ -182,6 +193,7 @@ function areaOfTriangle(x1, y1, x2, y2, x3, y3) {
 
 function drawPolygon(coordinates) {
     // console.log(coordinates);
+    // ctx.globalAlpha = 1;
     ctx.beginPath();
     ctx.moveTo(...coordinates[0]);
     for (let i = 1; i < coordinates.length; i++) {
@@ -198,10 +210,10 @@ function rotate(x, y, angle, x0, y0) {
     let y1 = y - y0;
     let h = x;
     let k = y;
-    originAngle = Math.atan(y1/x1);
+    originAngle = Math.atan(y1 / x1);
     length = Math.sqrt(x1 * x1 + y1 * y1);
-    h = Math.cos(angle+originAngle)*length+x0;
-    k = Math.sin(angle+originAngle)*length+y0;
+    h = Math.cos(angle + originAngle) * length + x0;
+    k = Math.sin(angle + originAngle) * length + y0;
 
     // console.log(h,k);
     return [h, k]//, deg(originAngle), deg(angle), x1, y1, length, x, y, x0,y0];
@@ -219,14 +231,14 @@ function rotateAll(c, angle) {
     return ret;
 }
 
-function translate(x,y, x1, y1){
-    return [x+x1, y+y1];
+function translate(x, y, x1, y1) {
+    return [x + x1, y + y1];
 }
 
 function translateAll(c, x1, y1) {
     let ret = [];
     for (let i = 1; i < c.length; i++) {
-        ret.push(translate(c[i][0], c[i][1], x1,y1))
+        ret.push(translate(c[i][0], c[i][1], x1, y1))
     }
     return ret;
 }
@@ -237,3 +249,59 @@ function rad(deg) {
 function deg(rad) {
     return (180 / Math.PI) * rad;
 }
+
+function listToString(list) {
+    let ret = '';
+    for (let i of list) {
+        ret = ret + '_' + i.toString()
+    }
+    return ret.toString().slice(1);
+}
+
+class WhileBreak {
+    constructor() {
+        this.counter = 0;
+    }
+    count() {
+        this.counter = this.counter + 1;
+    }
+}
+
+class Queue {
+    constructor() {
+        this.items = [];
+    }
+    enqueue(element) {
+        this.items.push(element);
+    }
+    dequeue() {
+        if (this.isEmpty())
+            return "Empty";
+        return this.items.shift();
+    }
+    front() {
+        if (this.isEmpty())
+            return "No elements in Queue";
+        return this.items[0];
+    }
+    clear() {
+        this.items = [];
+    }
+    isEmpty() {
+        return this.items.length == 0;
+    }
+    length(){
+        return this.items.length;
+    }
+    printQueue() {
+        return this.items;
+        var str = "";
+        for (var i = 0; i < this.items.length; i++)
+            str += this.items[i] + " ";
+        return str;
+    }
+}
+
+// getLastElement() {
+//     // return false;
+// }
