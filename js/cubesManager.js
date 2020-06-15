@@ -33,8 +33,8 @@ class CubesManager {
         let endY = 0
         // this.start = new Cube(startX, startY);
         // this.end = new Cube(endX, endY);
-        this.start = new Cube(-5, -3);
-        this.end = new Cube(6, 8);
+        this.start = new Cube(0, 0);
+        this.end = new Cube(2, 1);
         this.start.cubeType = 'start';
         this.end.cubeType = 'end';
         this.registerCube(this.start, this.masterCubeKeys);
@@ -142,11 +142,11 @@ class CubesManager {
         let [column, row] = this.classifier(x, y);
         if (objectsAreSame([column, row], this.start.loc)) {
             this.objectUnderMouse = this.start;
-            this.mouseaway2(x,y);
+            this.mouseaway2(x, y);
         }
         else if (objectsAreSame([column, row], this.end.loc)) {
             this.objectUnderMouse = this.end;
-            this.mouseaway2(x,y);
+            this.mouseaway2(x, y);
         }
         else {
             if (!objectsAreSame(this.lastHover, [column, row])) {
@@ -161,7 +161,7 @@ class CubesManager {
         }
     }
 
-    mouseaway2(x, y){
+    mouseaway2(x, y) {
         if (this.overCube) {
             this.hoverList.push(new Cube(...this.lastHover));
             this.overCube = null;
@@ -176,11 +176,15 @@ class CubesManager {
 
     registerCube(cube, keys) {
         let key = cube.name()
-        // if (key !== this.start.name() )
-        keys.add(key);
-        this.allCubes[key] = cube;
-        // console.log(this.allCubes);
-        // console.log(this.masterCubeKeys, this.searchCubeKeys)
+        if (objectsAreSame(cube.loc, this.start.loc)) { }
+        else if (objectsAreSame(cube.loc, this.end.loc)) { }
+        else {
+            // if (key !== this.start.name() )
+            keys.add(key);
+            this.allCubes[key] = cube;
+            // console.log(this.allCubes);
+            // console.log(this.masterCubeKeys, this.searchCubeKeys)
+        }
     }
 
     deregisterCube(key, keys) {
@@ -205,7 +209,8 @@ class CubesManager {
 
     clicked(x, y) {
         let [column, row] = this.classifier(x, y);
-        let cube = new Cube(column, row)
+        let cube = new Cube(column, row);
+        let key = listToString([column, row]);
         // if (!(ifin(this.selectedList, cube))) {
         //     // cube.fill.pattern = 0
         //     cube.fill.speed = 3
@@ -233,6 +238,9 @@ class CubesManager {
             // cube.cubeType = 'amazing';
             cube.cubeType = 'wall';
             this.registerCube(cube, this.selectedWallKeys);
+        }
+        else {
+            this.deregisterCube(key, this.selectedWallKeys);
         }
         // print(this.selectedList)
         // console.log(classNames(this.selectedList).indexOf([column, row]));
@@ -262,9 +270,23 @@ class CubesManager {
         oldCube.loc = newCube.loc
     }
 
-    isWall(col, row, side) {
+    isWall2(col, row, side) {
         [col, row] = this.exactCube(col, row, side);
         console.log(col, row, this.selectedWallKeys)
+        let key = listToString([col, row]);
+        if (this.selectedWallKeys.has(key)) {
+            return true;
+        }
+        // if (key in this.allCubes) {
+        //     if (this.allCubes[key].cubeType === 'wall') {
+        //         return true;
+        //     }
+
+        // }
+        return false;
+    }
+
+    isWall(col, row) {
         let key = listToString([col, row]);
         if (this.selectedWallKeys.has(key)) {
             return true;

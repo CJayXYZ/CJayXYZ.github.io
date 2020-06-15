@@ -57,7 +57,7 @@ class Colors {
                 this.color = '#cc9900';
                 break;
             case 'path':
-                this.color = '#ff4000';
+                this.color = '#dd42f5';
                 break;
             case 'wall':
                 this.color = '#ff0000';

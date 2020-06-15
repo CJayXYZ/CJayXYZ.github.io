@@ -1,5 +1,111 @@
 class IO {
     constructor() {
+        this.searching = false;
+        this.algo = null;
+        this.path = null;
+        this.pathFound = false;
+        // this.method = new Testing1();
+    }
+
+    clear() {
+        this.searching = false;
+        this.algo = null;
+        this.path = null;
+        this.pathFound = false;
+        this.deleteAllPathCube();
+        this.deleteAllSearchCube();
+    }
+
+
+
+    stop(pathList = null) {
+        this.searching = false;
+        if (pathList) {
+            // for (let loc of pathList) {
+            //     // this.addPathCube(loc);
+            // }
+        }
+        this.path = pathList;
+    }
+
+    start() {
+        // this.algo = new BreadthFirstSearch(io);
+        this.algo = new BreadthFirstSearch(this);
+        this.searching = true;
+        this.path = null;
+    }
+
+    run() {
+        if (this.searching) {
+            this.nextLevel();
+
+        }
+        else if (this.path) {
+            if (this.path.length > 0) {
+                let loc = this.path.next();
+                if (loc) {
+                    this.addPathCube(loc);
+                }
+                else { }
+            }
+        }
+    }
+
+    // drawPath() {
+
+    // }
+
+    next() {
+        let [col, row, dist] = this.algo.getNextLoc();
+        // console.log([col, row], this.bfs.getLevel(), dist);
+        if (dist) {
+            this.addSearchCube([col, row]);
+        }
+        return dist;
+    }
+
+    prev() {
+        let [col, row, dist] = this.algo.getPrevLoc();
+        if (dist) {
+            this.deleteSearchCube([col, row]);
+        }
+        return dist;
+    }
+
+    nextLevel() {
+        let level = this.algo.getLevel();
+        let dist = level;
+        while (true) {
+            if (dist !== level) {
+                break;
+            }
+            if (!this.searching) { break; }
+            dist = this.next();
+        }
+    }
+
+    prevLevel() {
+        let level = this.algo.getLevel();
+        let dist = level;
+        while (true) {
+            if (dist !== level) {
+                break;
+            }
+            dist = this.prev();
+        }
+    }
+
+
+
+    // prev() {
+    //     let [col, row] = this.bfs.getPrevLoc();
+    // }
+
+
+    draw() {
+        if (this.searching) {
+
+        }
 
     }
 
@@ -11,6 +117,25 @@ class IO {
         if (!(loc in cubesManager.allCubes)) {
             cubesManager.registerCube(cube, cubesManager.searchCubeKeys);
         }
+    }
+
+    deleteSearchCube(loc) {
+        // let [col, row] = loc;
+        let endLoc = listToString(this.getEndLoc());
+        let startLoc = listToString(this.getStartLoc());
+        let key = listToString(loc);
+        console.log(343);
+        if ((key in cubesManager.allCubes)) {
+            if (!([endLoc, startLoc].includes(key))) {
+                cubesManager.deregisterCube(key, cubesManager.searchCubeKeys)
+            }
+        }
+        // for (let key of cubesManager.searchCubeKeys) {
+        //     if (!([endLoc, startLoc].includes(key))) {
+        //         delete cubesManager.allCubes[key];
+        //     }
+        // }
+        // cubesManager.searchCubeKeys.clear();
     }
 
     addPathCube(loc) {
@@ -25,7 +150,7 @@ class IO {
         }
     }
 
-    deleteSearchCube() {
+    deleteAllSearchCube() {
         let endLoc = listToString(this.getEndLoc());
         let startLoc = listToString(this.getStartLoc());
         for (let key of cubesManager.searchCubeKeys) {
@@ -36,14 +161,25 @@ class IO {
         cubesManager.searchCubeKeys.clear();
     }
 
-    drawPath(path) {
-        let [col, row] = this.getStartLoc();
-        for (let move of path) {
-            [col, row] = this.newLoc(col, row, move);
-            this.addPathCube([col, row])
+    deleteAllPathCube() {
+        let endLoc = listToString(this.getEndLoc());
+        let startLoc = listToString(this.getStartLoc());
+        for (let key of cubesManager.pathCubeKeys) {
+            if (!([endLoc, startLoc].includes(key))) {
+                delete cubesManager.allCubes[key];
+            }
         }
-
+        cubesManager.pathCubeKeys.clear();
     }
+
+    // drawPath(path) {
+    //     let [col, row] = this.getStartLoc();
+    //     for (let move of path) {
+    //         [col, row] = this.newLoc(col, row, move);
+    //         this.addPathCube([col, row])
+    //     }
+
+    // }
 
     getStartLoc() {
         return cubesManager.start.loc;
@@ -63,7 +199,7 @@ class IO {
 
     isWallOld(col, row, side) {
         // return wallsManager.isWall(col, row, side)
-        return cubesManager.isWall(col, row, side)
+        return cubesManager.isWall2(col, row, side)
     }
 
     isCubeCoverd(col, row, side) {
@@ -105,7 +241,7 @@ class IO {
     }
 
     isWall(col, row) {
-        return false;
+        return cubesManager.isWall(col, row)
     }
 
     isEnd(col, row) {
@@ -141,16 +277,26 @@ class IO {
 }
 
 class Testing1 {
-    constructor() {
-        this.bfs = new BreadthFirstSearch(io);
+    constructor(parent) {
+        this.bfs = new BreadthFirstSearch(parent);
+        // this.nextLevel(); this.nextLevel(); this.next(); this.next(); this.next(); this.next();
+        // this.next();
 
     }
     next() {
-        let [col, row] = this.bfs.getNextLoc();
-        console.log([col, row]);
+        let [col, row, dist] = this.bfs.getNextLoc();
+        // console.log([col, row], this.bfs.getLevel(), dist);
         io.addSearchCube([col, row]);
+        return dist;
     }
-    whole() {
+
+    prev() {
+        let [col, row, dist] = this.bfs.getPrevLoc();
+        io.deleteSearchCube([col, row]);
+        return dist;
+    }
+
+    nextLevel2() {
         let lst = this.bfs.getLevelLoc();
         // console.log(lst);
         for (let loc of lst) {
@@ -158,6 +304,34 @@ class Testing1 {
             io.addSearchCube(loc);
         }
     }
+
+    nextLevel() {
+        let level = this.bfs.getLevel();
+        let dist = level;
+        while (true) {
+            if (dist !== level) {
+                break;
+            }
+            dist = this.next();
+        }
+    }
+
+    prevLevel() {
+        let level = this.bfs.getLevel();
+        let dist = level;
+        while (true) {
+            if (dist !== level) {
+                break;
+            }
+            dist = this.prev();
+        }
+    }
+
+
+
+    // prev() {
+    //     let [col, row] = this.bfs.getPrevLoc();
+    // }
 }
 
 class BreadthFirstSearch {
@@ -165,6 +339,9 @@ class BreadthFirstSearch {
         this.parent = parent;
         this.checkSeq = ['R', 'D', 'L', 'U'];
         this.checkSeqIndex = 0;
+        this.probeMode = false;
+        this.flagLoc = null;
+        this.memoryDict = {};
         this.reset();
     }
 
@@ -181,31 +358,82 @@ class BreadthFirstSearch {
         // this.searchedPaths.enqueue('');
         this.searchedPaths = ['']
         this.currIndexInPaths = 0;
+        this.currProbeLevel = 0;
+        this.prevLevelIndex = 0;
+        this.levelLength = {};
     }
 
     getNextLoc() {
-        let [col, row] = this.getNextMove();
-        // if (this.parent.isValidMove(...this.currLoc, move)) {
-        //     this.searchedPaths.push(moves);
-        // }
-        if (this.parent.isEnd(col, row)) {
-            this.parent.stop();
-            return;
+        let col, row, dist;
+        if (this.probeMode) {
+            this.prevLevelIndex = this.prevLevelIndex + 1;
+            if (this.memoryDict[this.currProbeLevel].length > this.prevLevelIndex) {
+                [col, row] = this.memoryDict[this.currProbeLevel][this.prevLevelIndex];
+                dist = this.currProbeLevel;
+                // if (!objectsAreSame(this.flagLoc, [...this.memoryDict[this.currProbeLevel][this.prevLevelIndex], this.currProbeLevel])) {
+                if (objectsAreSame(this.flagLoc, [col, row, dist])) {
+                    this.probeMode = false;
+                }
+            }
+            else {
+                this.prevLevelIndex = -1;
+                this.currProbeLevel = this.currProbeLevel + 1;
+                return this.getNextLoc();
+            }
         }
-        return [col, row];
+        else {
+            let value = this.getNextMove();
+            if (value) {
+                [col, row, dist] = value;
+                // if (this.parent.isValidMove(...this.currLoc, move)) {
+                //     this.searchedPaths.push(moves);
+                // }
+                // if (this.parent.isEnd(col, row)) {
+                //     this.parent.stop();
+                // return;
+                // }
+            }
+        }
+        return [col, row, dist];
     }
 
     getPrevLoc() {
-        let [col, row] = this.getPrevMove();
-        // if (this.parent.isValidMove(...this.currLoc, move)) {
-        //     this.searchedPaths.push(moves);
-        // }
+        let [col, row, dist] = this.getPrevMove();
         if (this.parent.isStart(col, row)) {
-            this.parent.stop();
-            return;
+            this.parent.start();
+            // return;
         }
-        return [col, row];
+        return [col, row, dist];
 
+    }
+
+    getPrevMove() {
+        let index = this.prevLevelIndex;
+        if (!this.probeMode) {
+            this.probeMode = true;
+        }
+        if (this.prevLevelIndex < 0) {
+            this.currProbeLevel = this.currProbeLevel - 1;
+            if (this.currProbeLevel > 0) {
+                this.prevLevelIndex = this.memoryDict[this.currProbeLevel].length - 1;
+                return this.getPrevMove();
+            }
+            else {
+                this.currProbeLevel = 1;
+                return this.startLoc;
+            }
+        }
+        if (!(this.currProbeLevel < 1)) {
+            this.prevLevelIndex = this.prevLevelIndex - 1;
+            console.log(this.currProbeLevel, index, this.prevLevelIndex);
+            return [...this.memoryDict[this.currProbeLevel][index], this.currProbeLevel];
+        }
+        console.log('Some error in previous command.')
+    }
+
+    getLevel() {
+        // return this.searchedPaths[this.currIndexInPaths].length;
+        return this.currProbeLevel;
     }
 
     getLevelLoc() {
@@ -243,16 +471,51 @@ class BreadthFirstSearch {
             this.searchedPaths.push(moves);
         }
         else {
-            console.log('recursion')
+            // console.log('recursion')
             return this.getNextMove();
         }
-        return [col, row];
+        if (this.parent.isEnd(col, row)) {
+            this.pathFound(moves);
+        }
+        // console.log(path, col, row, moves, moves.length);
+        this.addLocToMemory(col, row, moves.length);
+        return [col, row, moves.length];
+    }
+
+    addLocToMemory(col, row, dist) {
+        if (dist in this.memoryDict) {
+            this.memoryDict[dist].push([col, row])
+        }
+        else {
+            this.memoryDict[dist] = [[col, row]]
+        }
+        this.flagLoc = [col, row, dist];
+        this.currProbeLevel = dist;
+        this.levelLength[dist] = this.memoryDict[dist].length;
+        this.prevLevelIndex = this.memoryDict[dist].length - 1;
     }
 
     setCurrLoc(path) {
         this.currLoc = this.finalLoc(...this.startLoc, path);
-        console.log(path);
+        // console.log(path);
         return this.currLoc;
+    }
+
+    pathFound(path) {
+        let pathList = this.pathToLocList(path);
+        console.log("Path found: ", path);
+        this.parent.stop(pathList);
+        // this.reset();
+    }
+
+    pathToLocList(path) {
+        let pathList = new IterList();
+        let [col, row] = this.startLoc;
+        for (let move of path) {
+            [col, row] = this.newLoc(col, row, move);
+            pathList.push([col, row]);
+        }
+        return pathList;
     }
 
     newLoc(col, row, side) {
@@ -274,8 +537,10 @@ class BreadthFirstSearch {
     }
 
     finalLoc(col, row, path) {
-        for (let move of path) {
-            [col, row] = this.newLoc(col, row, move);
+        if (path) {
+            for (let move of path) {
+                [col, row] = this.newLoc(col, row, move);
+            }
         }
         return [col, row];
     }

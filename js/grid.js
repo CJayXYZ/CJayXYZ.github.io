@@ -29,6 +29,7 @@ class Grid {
         this.mouseDragging = false;
         this.mouseHoldingObject = null;
         this.objectUnderMouse = null;
+        this.lastLocUnderMouse = [];
         // console.log(this.originX, this.originY)
     }
 
@@ -117,7 +118,7 @@ class Grid {
         if (type === 'cube') {
             instance = cubesManager;
         }
-        else if (type === 'wall'){
+        else if (type === 'wall') {
             instance = wallsManager;
         }
         else {
@@ -169,46 +170,50 @@ class Grid {
         this.mouseRightClickHold = false;
         this.mouseMoving = false;
         this.mouseDragging = false;
-        this.objectUnderMouse = null;      
+        this.objectUnderMouse = null;
     }
 
     objectUnderMouseHandler(x, y) {
         this.objectUnderMouse = null;
         let object = this.classifier(x, y);
+        let [column, row] = cubesManager.classifier(x, y);
+        // if (!objectsAreSame([column, row], this.lastLocUnderMouse)) {
         // object = 'cube'
         switch (object) {
             case 'cube':
-                let [column, row] = cubesManager.classifier(x,y);
-                if (objectsAreSame([column, row], cubesManager.start.loc)){
+                // let [column, row] = cubesManager.classifier(x,y);
+                if (objectsAreSame([column, row], cubesManager.start.loc)) {
                     this.objectUnderMouse = cubesManager.start;
                 }
-                else if (objectsAreSame([column, row], cubesManager.end.loc)){
+                else if (objectsAreSame([column, row], cubesManager.end.loc)) {
                     this.objectUnderMouse = cubesManager.end;
                 }
                 else {
                     this.objectUnderMouse = cubesManager;
-                    console.log('1whsy');
+                    // console.log('1whsy');
                 }
                 break;
             case 'wall':
                 this.objectUnderMouse = wallsManager;
-                console.log('wallllll');
+                console.log('wall');
                 break;
         }
-        if (this.mouseHoldingObject){
+        if (this.mouseHoldingObject) {
             this.mouseHoldingObject.over();
             // cubesManager.over(x,y);
         }
         else {
             // if 
             // this.objectUnderMouse.over(x, y);
-            cubesManager.over(x,y);
+            cubesManager.over(x, y);
         }
+        // }
+        // this.lastLocUnderMouse = [column, row];
     }
 
     mouseButtonHandler(button, type) {
         let bool = false;
-        switch (type){
+        switch (type) {
             case 'up':
                 bool = false;
                 break;
@@ -216,7 +221,7 @@ class Grid {
                 bool = true;
                 break;
         }
-        switch (button){
+        switch (button) {
             case 0:
                 this.mouseLeftClicked = bool;
                 break;
@@ -224,39 +229,46 @@ class Grid {
                 this.mouseRightClicked = bool;
                 break;
         }
+        // console.log('button: ', button, type);
     }
 
-    mouseMoveHandler(x, y){
+    mouseMoveHandler(x, y) {
         this.objectUnderMouseHandler(x, y)
+        let [col, row] = cubesManager.classifier(x, y);
 
-        if (this.mouseRightClicked === true) {
-            this.mouseRightClickHold = true;
-        }
-        else if (this.mouseLeftClicked === true) {
-            this.mouseLeftClickHold = true;
-        }
-        else {
-            this.mouseRightClickHold = false;
-            this.mouseLeftClickHold = false;
-        }
+        // if (!objectsAreSame([col, row], this.lastLocUnderMouse)) {
+        if((!objectsAreSame([col, row], this.lastLocUnderMouse)) |(! this.mouseHoldingObject)) {
 
-        if (this.mouseLeftClickHold === true){
-            if (!this.mouseHoldingObject){
-                this.mouseHoldingObject = this.objectUnderMouse;
+            if (this.mouseRightClicked === true) {
+                this.mouseRightClickHold = true;
             }
-            if (this.mouseHoldingObject){
-                if (this.mouseHoldingObject.__str__() !== 'cubesManagers'){
-                    this.mouseHoldingObject.drag(x,y)
+            else if (this.mouseLeftClicked === true) {
+                this.mouseLeftClickHold = true;
+            }
+            else {
+                this.mouseRightClickHold = false;
+                this.mouseLeftClickHold = false;
+            }
+
+            if (this.mouseLeftClickHold === true) {
+                if (!this.mouseHoldingObject) {
+                    this.mouseHoldingObject = this.objectUnderMouse;
+                }
+                if (this.mouseHoldingObject) {
+                    if (this.mouseHoldingObject.__str__() !== 'cubesManagers') {
+                        this.mouseHoldingObject.drag(x, y);
+                    }
                 }
             }
+            else if (this.mouseRightClickHold === true) {
+                this.drag(x, y);
+                this.mouseHoldingObject = null;
+            }
+            else {
+                this.mouseHoldingObject = null;
+            }
         }
-        else if (this.mouseRightClickHold=== true) {
-            this.drag(x, y)
-            this.mouseHoldingObject = null;
-        }
-        else {
-            this.mouseHoldingObject = null;
-        }
+        this.lastLocUnderMouse = [col, row];
         this.lastLocX = event.clientX;
         this.lastLocY = event.clientY;
         this.lastOriginX = this.originX;
@@ -266,12 +278,13 @@ class Grid {
 
     click(instance, mouseX, mouseY) {
         let obj1 = 'wallsManagers';
-        if (!this.mouseHoldingObject){
-            if (instance.__str__() === obj1){
+        if (!this.mouseHoldingObject) {
+            if (instance.__str__() === obj1) {
                 instance.clicked(mouseX, mouseY);
             }
-            else if (instance.__str__() === 'cubesManager'){
+            else if (instance.__str__() === 'cubesManager') {
                 instance.clicked(mouseX, mouseY);
+                // console.log('working with click ');
             }
         }
     }

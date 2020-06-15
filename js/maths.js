@@ -305,3 +305,35 @@ class Queue {
 // getLastElement() {
 //     // return false;
 // }
+
+class IterList {
+    constructor() {
+        this.list = [];
+        this.index = 0;
+    }
+
+    get length() {
+        return this.list.length
+    }
+
+    push(element) {
+        this.list.push(element);
+    }
+
+    clear() {
+        this.list = [];
+        this.index = 0;
+    }
+
+    next() {
+        let ret = null;
+        if (this.index < this.list.length) {
+            ret = this.list[this.index];
+            this.index = this.index + 1;
+        }
+        else {
+            ret = null;
+        }
+        return ret;
+    }
+}

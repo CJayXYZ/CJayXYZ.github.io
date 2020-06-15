@@ -9,7 +9,7 @@ canvas.width = maxWidth;
 canvas.height = maxHeight;
 // console.log(canvas, ctx, maxWidth, maxHeight);
 let t = 0;
-let pix = 20;
+let pix = 50;
 let pixLimit = [1e-1, 1e4]
 let cubes = [];
 let shakeby = 5;
@@ -19,7 +19,7 @@ let rate = 1;
 let color_rate = 300;
 let fadeSpeed = .0002;
 let canvasLoc = canvas.getBoundingClientRect();
-let controlButton= 2;
+let controlButton = 2;
 let wallFactor = 10;
 
 let grid = new Grid();
@@ -40,9 +40,10 @@ function mainLoop() {
     //     clearSearchCubes();
     //     clearSearchCubes = false;
     // }
-    if (findPathBool) {
-        io.findPath();
-    }
+    // if (findPathBool) {
+    //     io.findPath();
+    // }
+    io.run();
     wallsManager.draw();
     cubesManager.draw();
     // grid.drawOrigin();
@@ -63,7 +64,7 @@ function update() {
     canvas.height = maxHeight;
     grid.maxHeight = canvas.height;
     grid.maxWidth = canvas.width;
-    console.log(grid.maxWidth, grid.maxHeight )
+    console.log(grid.maxWidth, grid.maxHeight)
 }
 
 
@@ -121,19 +122,27 @@ canvas.onmousewheel = function (event) {
     timer = setInterval(mainLoop, stepSize);
     print(Math.floor(pix))
 }
-window.addEventListener("keyup", function(event) {
+window.addEventListener("keyup", function (event) {
     // Number 13 is the "Enter" key on the keyboard
+    // console.log(event)
     if (event.keyCode === 13) {
-      // Cancel the default action, if needed
-      event.preventDefault();
-      // Trigger the button element with a click
-      io.deleteSearchCube();
-      findPathBool = true;
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        //   io.deleteSearchCube();
+        io.clear();
+        io.start();
     }
-  });
+    else if (event.keyCode === 46) {
+
+        event.preventDefault();
+        io.clear();
+    }
+
+});
 
 function test() {
     ctx.fillStyle = '#f00';
-    let coordinates = [[150, 150], [350,150], [300,300], [150,300]]
+    let coordinates = [[150, 150], [350, 150], [300, 300], [150, 300]]
     drawPolygon(rotateAll(coordinates, 0));
 }
