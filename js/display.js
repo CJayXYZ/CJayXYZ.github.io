@@ -9,7 +9,7 @@ canvas.width = maxWidth;
 canvas.height = maxHeight;
 // console.log(canvas, ctx, maxWidth, maxHeight);
 let t = 0;
-let pix = 50;
+let pix = 25;
 let pixLimit = [1e-1, 1e4]
 let cubes = [];
 let shakeby = 5;
@@ -137,6 +137,18 @@ window.addEventListener("keyup", function (event) {
 
         event.preventDefault();
         io.clear();
+    }
+    else if (event.key === 'w') {
+        
+        event.preventDefault();
+        io.clear();
+        io.createDefaultWalls();
+    }
+    else if (event.key === 'm') {
+        
+        event.preventDefault();
+        io.clear();
+        io.createMaze();
     }
 
 });

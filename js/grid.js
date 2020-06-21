@@ -273,7 +273,7 @@ class Grid {
         this.lastLocY = event.clientY;
         this.lastOriginX = this.originX;
         this.lastOriginY = this.originY;
-        // this.objectUnderMouse.over(x, y);
+        this.objectUnderMouse.over(x, y);
     }
 
     click(instance, mouseX, mouseY) {

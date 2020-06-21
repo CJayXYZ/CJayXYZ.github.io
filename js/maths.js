@@ -1,21 +1,31 @@
 function numsToRGB(r, g, b) {
-    return 'rgb(' + r + ',' + g + ',' + b + ')'
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
+}
+
+function vector(start, end, step) {
+    let curr = start;
+    let list = [];
+    while (curr<= end-1){
+        list.push(curr);
+        curr = curr+ step;
+    }
+    return list;
 }
 
 function randomVector(num, len) {
     let vector = [];
     for (let i = 0; i < len; i++) {
-        vector.push(random(0, 256))
+        vector.push(random(0, 256));
     }
     return vector
 }
 
 function int(x) {
-    return Math.floor(x)
+    return Math.floor(x);
 }
 
 function random(x, y) {
-    return int(Math.random() * (y - x)) + x
+    return int(Math.random() * (y - x)) + x;
 }
 
 function vectorRatio(x, y, mode = 0) {
@@ -24,11 +34,11 @@ function vectorRatio(x, y, mode = 0) {
         let m = x[i] / y[i];
         switch (mode) {
             case 0:
-                ret.push(m)
+                ret.push(m);
                 break;
             case 1:
-                if (m > 1) { m = 1 / m }
-                ret.push(m)
+                if (m > 1) { m = 1 / m; }
+                ret.push(m);
         }
     }
     return ret
@@ -290,7 +300,7 @@ class Queue {
     isEmpty() {
         return this.items.length == 0;
     }
-    length(){
+    length() {
         return this.items.length;
     }
     printQueue() {
@@ -307,8 +317,8 @@ class Queue {
 // }
 
 class IterList {
-    constructor() {
-        this.list = [];
+    constructor(list = []) {
+        this.list = list;
         this.index = 0;
     }
 
@@ -336,4 +346,128 @@ class IterList {
         }
         return ret;
     }
+}
+
+class UniqueIterList extends IterList {
+    constructor() {
+        super();
+        this.keyList = new Set();
+    }
+
+    push(element) {
+        let key = this.getKey(element);
+        if (!this.keyList.has(key)) {
+            super.push(element);
+            this.keyList.add(key);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    has(element) {
+        let key = this.getKey(element);
+        return this.keyList.has(key);
+    }
+
+    getKey(item) {
+        let key;
+        if (Array.isArray(item)) {
+            key = listToString(item);
+        }
+        else {
+            key = item.toString();
+        }
+        return key;
+    }
+
+    clear() {
+        super.clear();
+        this.keyList.clear();
+    }
+}
+
+class Combination {
+    constructor() {
+        this.list1 = [];
+        this.list2 = [];
+        this.len1 = 0;
+        this.len2 = 0;
+        this.reversed = false;
+    }
+
+    combine(list1, list2) {
+        this.list1 = list1;
+        this.list2 = list2;
+        this.len1 = list1.length;
+        this.len2 = list2.length;
+        let indexList = this.generateIndexList();
+        // console.log(indexList)
+        // console.log(this.convertToItemList(indexList));
+        return this.convertToItemList(indexList);
+    }
+
+    convertToItemList(indexList) {
+        let itemsList = [];
+        for (let i = 0
+            ; i<indexList.length; i++){
+            let [ii, jj] = indexList[i];
+            let iii = this.list1[ii];
+            let jjj = this.list2[jj];
+            itemsList.push([iii, jjj]);
+        }
+        // console.log(itemsList)
+        return itemsList;
+    }
+
+    generateIndexList() {
+        this.reversed = false;
+        let len1 = this.len1;
+        let len2 = this.len2;
+        let i, j, k, max;
+        let indexList = [];
+        max = len2;
+
+        if (len1 < len2) {
+            let a = len1;
+            len1 = len2;
+            len2 = a;
+            this.reversed = true;
+            max = len2;
+        }
+
+        for (i = 0; i < len1; i++) {
+            if (i > (max - 1)) {
+                k = max - 1;
+            }
+            else {
+                k = i;
+            }
+            for (j = k; j > -1; j--) {
+                if (k === i) {
+                    if (i === j) {
+                        this.listPush(i, j, indexList);
+                    }
+                    else {
+                        this.listPush(i, j, indexList);
+                        this.listPush(j, i, indexList);
+                    }
+                }
+                else {
+                    this.listPush(i, j, indexList);
+                }
+            }
+        }
+        return indexList;
+    }
+
+    listPush(i, j, list){
+        if (this.reversed) {
+            list.push([j,i]);
+        }
+        else {
+            list.push([i,j]);
+        }
+    }  aq
 }

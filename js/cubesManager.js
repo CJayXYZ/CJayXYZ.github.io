@@ -33,8 +33,8 @@ class CubesManager {
         let endY = 0
         // this.start = new Cube(startX, startY);
         // this.end = new Cube(endX, endY);
-        this.start = new Cube(0, 0);
-        this.end = new Cube(2, 1);
+        this.start = new Cube(-11, -5);
+        this.end = new Cube(11, 5);
         this.start.cubeType = 'start';
         this.end.cubeType = 'end';
         this.registerCube(this.start, this.masterCubeKeys);
@@ -45,6 +45,15 @@ class CubesManager {
         // this.allCubes.push(this.end);
         this.lockedCube = this.start;
     }
+
+    get noOfColumnsAndRows() {
+        return [grid.maxColumns, grid.maxRows];
+    }
+
+    get firstColAndRow() {
+        return [int(-grid.maxColumns / 2 + 1), int(-grid.maxRows / 2 + 1)]
+    }
+
 
     shadow() {
         // ctx.shadowOffsetX = ctx.lineWidth / 5
@@ -246,6 +255,26 @@ class CubesManager {
         // console.log(classNames(this.selectedList).indexOf([column, row]));
     }
 
+    addWalls(col, row) {
+        let cube = new Cube(col, row);
+        cube.cubeType = 'wall';
+        this.registerCube(cube, this.selectedWallKeys);
+    }
+
+    deleteWalls(col, row) {
+        // let cube = new Cube(col, row);
+        let key = listToString([col, row]);
+        // cube.cubeType = 'wall';
+        this.deregisterCube(key, this.selectedWallKeys);
+    }
+
+    deleteAllWalls() {
+        for (let key of this.selectedWallKeys) {
+            delete this.allCubes[key];
+        }
+        this.selectedWallKeys.clear();
+    }
+
     delete(x, y) { }
 
     classifier(x, y) {
@@ -322,4 +351,262 @@ class CubesManager {
     __str__() {
         return 'cubesManager'
     }
+}
+
+class CreateWalls {
+    constructor(parent) {
+        this.parent = parent;
+        this.updateDefaults();
+    }
+
+    updateDefaults() {
+        this.startLoc = this.parent.start.loc;
+        this.endLoc = this.parent.end.loc;
+        [this.cols, this.rows] = this.parent.noOfColumnsAndRows;
+        [this.firstCol, this.firstRow] = this.parent.firstColAndRow;
+        [this.lastCol, this.lastRow] = [this.firstCol + this.cols, this.firstRow + this.rows];
+        // console.log(this.cols, this.rows)
+    }
+
+    createBox() {
+        let masterList = [];
+        let list1 = this.topRowLocs();
+        let list2 = this.rightColLocs();
+        let list3 = this.bottomRowLocs();
+        let list4 = this.leftColLocs();
+        list1.pop();
+        list2.pop();
+        list3.pop();
+        list4.pop();
+        masterList = list1.concat(list2, list3, list4);
+        let ret = new IterList(masterList);
+        return ret;
+
+    }
+
+    topRowLocs() {
+        this.updateDefaults();
+        let [x, y] = [this.firstCol, this.firstRow];
+        let list = [];
+        while (x <= this.lastCol) {
+            list.push([x, y]);
+            x = x + 1;
+        }
+        return list;
+    }
+
+    bottomRowLocs() {
+        this.updateDefaults();
+        let [x, y] = [this.lastCol, this.lastRow];
+        let list = [];
+        while (x >= this.firstCol) {
+            list.push([x, y]);
+            x = x - 1;
+        }
+        return list;
+    }
+
+    rightColLocs() {
+        this.updateDefaults();
+        let [x, y] = [this.lastCol, this.firstRow];
+        let list = [];
+        while (y <= this.lastRow) {
+            list.push([x, y]);
+            y = y + 1;
+        }
+        return list;
+    }
+
+    leftColLocs() {
+        this.updateDefaults();
+        let [x, y] = [this.firstCol, this.lastRow];
+        let list = [];
+        while (y >= this.firstRow) {
+            list.push([x, y]);
+            y = y - 1;
+        }
+        return list;
+    }
+}
+
+class Maze {
+    constructor(parent) {
+        this.parent = parent;
+        this.updateDefaults();
+        this.possibleMoves = ['R', 'D', 'L', 'U', false];
+        this.wallList = new UniqueIterList();
+        this.createWalls = new CreateWalls(this.parent);
+        this.fixedWallLocList = [];
+        [this.wallOriginX, this.wallOriginY] = [0, 0];
+        this.createFixedWallList();
+    }
+
+    updateDefaults() {
+        this.startLoc = this.parent.start.loc;
+        this.endLoc = this.parent.end.loc;
+        [this.cols, this.rows] = this.parent.noOfColumnsAndRows;
+        [this.firstCol, this.firstRow] = this.parent.firstColAndRow;
+        [this.lastCol, this.lastRow] = [this.firstCol + this.cols, this.firstRow + this.rows];
+        // console.log(this.cols, this.rows)
+    }
+
+    createFixedWallList() {
+        if (this.firstCol % 2 !== 0) {
+            this.firstCol = this.firstCol + 1;
+        }
+        if (this.firstRow % 2 !== 0) {
+            this.firstRow = this.firstRow + 1;
+        }
+        let cols = vector(this.firstCol, this.lastCol + 1, 2);
+        let rows = vector(this.firstRow, this.lastRow + 1, 2);
+        let combine = new Combination();
+
+        this.fixedWallLocList = combine.combine(cols, rows);
+        return this.fixedWallLocList;
+    }
+
+    isStart(col, row) {
+        this.updateDefaults();
+        return objectsAreSame(this.startLoc, [col, row])
+    }
+
+    isEnd(col, row) {
+        this.updateDefaults();
+        return objectsAreSame(this.endLoc, [col, row]);
+    }
+
+    isValid(col, row) {
+        return !(this.isEnd(col, row) || this.isStart(col, row) || this.wallList.has([col, row]));
+    }
+
+    getRandomLoc() {
+        let col, row;
+        col = random(this.firstCol, this.lastCol);
+        row = random(this.firstRow, this.lastRow);
+        if (this.isValid(col, row)) {
+            return [col, row];
+        }
+        else {
+            console.log("recursion");
+            return this.getRandomLoc();
+        }
+    }
+
+    getRandomSide() {
+        let index = random(0, this.possibleMoves.length);
+        return this.possibleMoves[index]
+    }
+
+    getNextSide(loc = null, prevSide = null) {
+        let side = this.getRandomSide();
+        if (loc) {
+            if (prevSide) {
+                if (!this.isFixedWallLoc(...loc)) {
+                    side = prevSide;
+                }
+            }
+        }
+        return side;
+    }
+
+    isFixedWallLoc(col, row) {
+        let bool = true;
+        let diffX = col - this.wallOriginX;
+        let diffY = row - this.wallOriginY;
+        if (diffX % 2 !== 0) {
+            bool = false;
+        }
+        if (diffY % 2 !== 0) {
+            bool = false;
+        }
+        return bool;
+    }
+
+    createMaze() {
+        this.clear();
+        let list = this.fixedWallLocList;
+        // let [col, row] = this.getRandomLoc();
+        // [col, row] = [0, 0];
+        // this.wallList = this.createWalls.createBox();
+        // this.wallList.push([col, row])
+        for (let i = 0; i<list.length; i++){
+            let [col,row] = list[i];
+            (this.expandWalls(col, row));
+        }
+        return this.wallList
+    }
+
+    expandWalls(col = -4, row = -2) {
+        // this.clear();
+        let wallList = new UniqueIterList();
+        // let side = this.getRandomSide();
+        // let bool = true;
+        // // wallList.push([col, row]);
+        // bool = this.addWalls(col, row, wallList);
+        // while (bool && side) {
+        //     [col, row] = this.newLoc(col, row, side);
+        //     if (this.isValid(col, row)) {
+        //         bool = this.addWalls(col, row, wallList);
+        //     }
+        //     else {
+        //         break;
+        //     }
+        //     side = this.getRandomSide();
+        // }
+        // return wallList.list;
+        return this.recursiveWall(col, row, wallList);
+    }
+
+    recursiveWall(col, row, wallList, prevSide = null) {
+        let bool = this.addWalls(col, row, wallList);
+        let side = this.getNextSide([col, row], prevSide);
+        if (bool && side) {
+            [col, row] = this.newLoc(col, row, side);
+            if (this.isValid(col, row)) {
+                // bool = this.addWalls(col, row, wallList);
+                this.recursiveWall(col, row, wallList, side);
+            }
+        }
+        return wallList.list;
+    }
+
+    addWalls(col, row, wallList) {
+        let bool = wallList.push([col, row]);
+        this.wallList.push([col, row]);
+        // this.parent.addWalls(col, row);
+        return bool;
+    }
+
+    clear() {
+        this.parent.deleteAllWalls();
+        this.wallList.clear();
+    }
+
+    newLoc(col, row, side) {
+        switch (side) {
+            case 'R':
+                col = col + 1;
+                break;
+            case 'L':
+                col = col - 1;
+                break;
+            case 'D':
+                row = row + 1;
+                break;
+            case 'U':
+                row = row - 1;
+                break;
+        }
+        return [col, row];
+    }
+
+    finalLoc(col, row, path) {
+        if (path) {
+            for (let move of path) {
+                [col, row] = this.newLoc(col, row, move);
+            }
+        }
+        return [col, row];
+    }
+
 }

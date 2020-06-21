@@ -4,6 +4,9 @@ class IO {
         this.algo = null;
         this.path = null;
         this.pathFound = false;
+        this.createWalls = new CreateWalls(cubesManager);
+        this.maze = new Maze(cubesManager);
+        this.wallList = new IterList();
         // this.method = new Testing1();
     }
 
@@ -49,6 +52,39 @@ class IO {
                 else { }
             }
         }
+
+        if (this.wallList.list){
+            if (this.wallList.length > 0) {
+                let loc = this.wallList.next();
+                if (loc) {
+                    cubesManager.addWalls(...loc);
+                }
+                else { }
+            }
+        }
+
+
+    }
+
+    createDefaultWalls() {
+        this.createWallsList();
+    }
+
+    createMaze() {
+        this.createMazeList();
+        console.log(1212)
+    }
+
+    createWallsList() {
+        this.wallList.clear();
+        this.wallList = this.createWalls.createBox();
+        return this.wallList;
+    }
+    
+    createMazeList() {
+        this.wallList.clear();
+        this.wallList = this.maze.createMaze();
+        return this.wallList;
     }
 
     // drawPath() {
