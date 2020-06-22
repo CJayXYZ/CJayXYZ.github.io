@@ -11,6 +11,8 @@ class IO {
         this.timeForSearch = new Time(stepSize*10);
         // this.timeForPath = new Time();
         // this.method = new Testing1();
+        this.createMazeList();
+        this.firstRun = true;
     }
 
     clear() {
@@ -26,8 +28,8 @@ class IO {
         this.searching = false;
         if (pathList) {
             pathList.setTimer(stepSize*4);
+            pathList.pop();
         }
-        pathList.pop();
         this.path = pathList;
     }
 
@@ -60,7 +62,12 @@ class IO {
                 if (loc) {
                     cubesManager.addWalls(...loc);
                 }
-                else { }
+                else if (this.wallList.length === this.wallList.index){ 
+                    if (this.firstRun) {
+                        this.firstRun = false;
+                        this.start();
+                    }
+                }
             }
         }
 
@@ -146,7 +153,7 @@ class IO {
     addSearchCube(loc) {
         let cube = new Cube(...loc);
         cube.cubeType = 'searching';
-        cube.fill.speed = 3;
+        cube.fill.speed = 5;
         loc = listToString(loc);
         // console.log(cubesManager.end.loc, loc)
         if (!(loc in cubesManager.allCubes)) {

@@ -93,7 +93,7 @@ class CubesManager {
             // }
             this.hoverList[i].fadeSpeed = .003;
             // this.hoverList[i].fill.pattern = 'randomFix';
-            // this.hoverList[i].fill.pattern = 0;
+            this.hoverList[i].fill.pattern = 0;
             this.hoverList[i].cubeType = 'hover';
             this.hoverList[i].hover();
 
@@ -525,6 +525,7 @@ class Maze {
 
     createMaze() {
         this.clear();
+        this.createBox();
         let list = this.fixedWallLocList;
         // let [col, row] = this.getRandomLoc();
         // [col, row] = [0, 0];
@@ -535,6 +536,13 @@ class Maze {
             (this.expandWalls(col, row));
         }
         return this.wallList
+    }
+
+    createBox() {
+        let boxWallList = this.createWalls.createBox();
+        for (let i of boxWallList.list) {
+            this.wallList.push(i);
+        }
     }
 
     expandWalls(col = -4, row = -2) {

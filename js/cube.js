@@ -140,7 +140,7 @@ class Cube {
         ctx.globalAlpha = this.opacityHover.toFixed(3);
         // console.log(ctx.globalAlpha);
         ctx.fillStyle = this.fill.color;
-        ctx.fillRect(this.x, this.y, this.cubeLength, this.cubeLength);
+        // ctx.fillRect(this.x, this.y, this.cubeLength, this.cubeLength); // enable this
         ctx.globalAlpha = 1;
     }
 
@@ -151,7 +151,7 @@ class Cube {
         // this.cubeLength = pix;
         ctx.globalAlpha = this.opacityHover;
         ctx.fillStyle = this.fill.color;
-        ctx.fillRect(this.x, this.y, this.cubeLength, this.cubeLength);
+        // ctx.fillRect(this.x, this.y, this.cubeLength, this.cubeLength); // enable this
         // ctx.fillRect(x, y, width, width);
         ctx.globalAlpha = 1;
         // console.log('over', this.column, this.row)
