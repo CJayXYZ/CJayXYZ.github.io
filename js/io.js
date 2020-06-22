@@ -7,6 +7,9 @@ class IO {
         this.createWalls = new CreateWalls(cubesManager);
         this.maze = new Maze(cubesManager);
         this.wallList = new IterList();
+        // this.timeForMaze = new Time();
+        this.timeForSearch = new Time(stepSize*10);
+        // this.timeForPath = new Time();
         // this.method = new Testing1();
     }
 
@@ -19,15 +22,12 @@ class IO {
         this.deleteAllSearchCube();
     }
 
-
-
     stop(pathList = null) {
         this.searching = false;
         if (pathList) {
-            // for (let loc of pathList) {
-            //     // this.addPathCube(loc);
-            // }
+            pathList.setTimer(stepSize*4);
         }
+        pathList.pop();
         this.path = pathList;
     }
 
@@ -40,8 +40,9 @@ class IO {
 
     run() {
         if (this.searching) {
-            this.nextLevel();
-
+            if (this.timeForSearch.allow()) {
+                this.nextLevel();
+            }
         }
         else if (this.path) {
             if (this.path.length > 0) {
@@ -53,7 +54,7 @@ class IO {
             }
         }
 
-        if (this.wallList.list){
+        if (this.wallList.list) {
             if (this.wallList.length > 0) {
                 let loc = this.wallList.next();
                 if (loc) {
@@ -80,16 +81,13 @@ class IO {
         this.wallList = this.createWalls.createBox();
         return this.wallList;
     }
-    
+
     createMazeList() {
         this.wallList.clear();
         this.wallList = this.maze.createMaze();
+        this.wallList.setTimer(stepSize*3);
         return this.wallList;
     }
-
-    // drawPath() {
-
-    // }
 
     next() {
         let [col, row, dist] = this.algo.getNextLoc();
@@ -148,6 +146,7 @@ class IO {
     addSearchCube(loc) {
         let cube = new Cube(...loc);
         cube.cubeType = 'searching';
+        cube.fill.speed = 3;
         loc = listToString(loc);
         // console.log(cubesManager.end.loc, loc)
         if (!(loc in cubesManager.allCubes)) {
@@ -177,12 +176,14 @@ class IO {
     addPathCube(loc) {
         let cube = new Cube(...loc);
         cube.cubeType = 'path';
+        // cube.fill.speed = 500;
         loc = listToString(loc);
         if (!(loc in cubesManager.allCubes)) {
             cubesManager.registerCube(cube, cubesManager.pathCubeKeys);
         }
         else if ((loc in cubesManager.allCubes)) {
             cubesManager.allCubes[loc].cubeType = 'path';
+            cubesManager.allCubes[loc].fill.speed = 10;
         }
     }
 

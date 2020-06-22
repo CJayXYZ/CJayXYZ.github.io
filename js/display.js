@@ -13,10 +13,10 @@ let pix = 25;
 let pixLimit = [1e-1, 1e4]
 let cubes = [];
 let shakeby = 5;
-let stepSize = 33;
+let stepSize = 8;
 let timer;
 let rate = 1;
-let color_rate = 300;
+let color_rate = 5;
 let fadeSpeed = .0002;
 let canvasLoc = canvas.getBoundingClientRect();
 let controlButton = 2;
@@ -133,7 +133,7 @@ window.addEventListener("keyup", function (event) {
         io.clear();
         io.start();
     }
-    else if (event.keyCode === 46) {
+    else if (event.keyCode === 46) {// delete
 
         event.preventDefault();
         io.clear();
@@ -149,6 +149,7 @@ window.addEventListener("keyup", function (event) {
         event.preventDefault();
         io.clear();
         io.createMaze();
+        // io.createDefaultWalls();
     }
 
 });

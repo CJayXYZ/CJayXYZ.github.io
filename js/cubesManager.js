@@ -80,7 +80,7 @@ class CubesManager {
     draw() {
         this.shadow();
         this.updateMasterCubes();
-        let all = [];
+        // let all = [];
         // for (let i = 0; i < this.selectedList.length; i++) {
         //     this.selectedList[i].fill.pattern = 'amazing'
         //     // this.selectedList[i].fill.pattern = 'over'
@@ -97,7 +97,7 @@ class CubesManager {
             this.hoverList[i].cubeType = 'hover';
             this.hoverList[i].hover();
 
-            all.push(this.hoverList[i].loc);
+            // all.push(this.hoverList[i].loc);
             if (this.hoverList[i].state === false) {
                 this.hoverList.splice(i, 1);
             }
@@ -242,8 +242,8 @@ class CubesManager {
         //     // }
         // }
         if (!(this.selectedWallKeys.has(cube.name()))) {
-            cube.fill.speed = 3;
-            cube.fill.color = '#000';
+            // cube.fill.speed = 3;
+            // cube.fill.color = '#000';
             // cube.cubeType = 'amazing';
             cube.cubeType = 'wall';
             this.registerCube(cube, this.selectedWallKeys);
@@ -258,6 +258,7 @@ class CubesManager {
     addWalls(col, row) {
         let cube = new Cube(col, row);
         cube.cubeType = 'wall';
+        cube.fill.speed =2;
         this.registerCube(cube, this.selectedWallKeys);
     }
 

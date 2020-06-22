@@ -5,9 +5,9 @@ function numsToRGB(r, g, b) {
 function vector(start, end, step) {
     let curr = start;
     let list = [];
-    while (curr<= end-1){
+    while (curr <= end - 1) {
         list.push(curr);
-        curr = curr+ step;
+        curr = curr + step;
     }
     return list;
 }
@@ -320,6 +320,7 @@ class IterList {
     constructor(list = []) {
         this.list = list;
         this.index = 0;
+        this.timer = null;
     }
 
     get length() {
@@ -337,15 +338,32 @@ class IterList {
 
     next() {
         let ret = null;
-        if (this.index < this.list.length) {
-            ret = this.list[this.index];
-            this.index = this.index + 1;
-        }
-        else {
-            ret = null;
+        if (this.ifTimeAllow()) {
+            if (this.index < this.list.length) {
+                ret = this.list[this.index];
+                this.index = this.index + 1;
+            }
         }
         return ret;
     }
+
+    ifTimeAllow() {
+        if (!this.timer) {
+            return true
+        }
+        else {
+            return this.timer.allow();
+        }
+    }
+
+    setTimer(interval = 1) {
+        this.timer = new Time(interval);
+    }
+
+    pop() {
+        return this.list.pop();
+    }
+
 }
 
 class UniqueIterList extends IterList {
@@ -410,8 +428,7 @@ class Combination {
 
     convertToItemList(indexList) {
         let itemsList = [];
-        for (let i = 0
-            ; i<indexList.length; i++){
+        for (let i = 0; i < indexList.length; i++) {
             let [ii, jj] = indexList[i];
             let iii = this.list1[ii];
             let jjj = this.list2[jj];
@@ -462,12 +479,12 @@ class Combination {
         return indexList;
     }
 
-    listPush(i, j, list){
+    listPush(i, j, list) {
         if (this.reversed) {
-            list.push([j,i]);
+            list.push([j, i]);
         }
         else {
-            list.push([i,j]);
+            list.push([i, j]);
         }
-    }  aq
+    } aq
 }
