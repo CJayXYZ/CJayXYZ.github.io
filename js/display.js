@@ -1,4 +1,4 @@
-const canvas = document.querySelector('#testLoop');
+const canvas = document.querySelector('#mainGrid');
 const ctx = canvas.getContext('2d');
 let mainOffset = 50;
 // canvas.width = window.innerWidth - mainOffset;
@@ -9,7 +9,7 @@ canvas.width = maxWidth;
 canvas.height = maxHeight;
 // console.log(canvas, ctx, maxWidth, maxHeight);
 let t = 0;
-let pix = 25;
+let pix = 20;
 let pixLimit = [1e-1, 1e4]
 let cubes = [];
 let shakeby = 5;
@@ -130,7 +130,6 @@ window.addEventListener("keyup", function (event) {
         event.preventDefault();
         // Trigger the button element with a click
         //   io.deleteSearchCube();
-        io.clear();
         io.start();
     }
     else if (event.keyCode === 46) {// delete
@@ -147,12 +146,14 @@ window.addEventListener("keyup", function (event) {
     else if (event.key === 'm') {
         
         event.preventDefault();
-        io.clear();
         io.createMaze();
         // io.createDefaultWalls();
     }
 
 });
+
+
+
 
 function test() {
     ctx.fillStyle = '#f00';

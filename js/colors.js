@@ -59,18 +59,22 @@ class Colors {
                 break;
             case 'searching':
                 this._color = '#cc9900';
-                this.colorFinal = [204, 153, 0];
+                // this.colorFinal = [204, 153, 0];
+                this.colorFinal = [153, 120, 0];
+                // this.colorFinal = [0, 175, 245];
                 break;
             case 'path':
                 this._color = '#cccccc';
                 this.isColorMoving = true;
-                this.colorInit = [204, 153, 0];
-                this.colorMoving = [204, 153, 0];
+                // this.colorInit = [204, 153, 0];
+                // this.colorMoving = [204, 153, 0];
+                this.colorInit = [153, 120, 0];
+                this.colorMoving = [153, 120, 0];
                 this.colorFinal = [204, 204, 204];
                 break;
             case 'wall':
                 this._color = '#ff0000';
-                this.colorFinal = [255, 0, 0];
+                this.colorFinal = [180, 0, 0];
                 break;
             case 'test':
                 this._color = '#fff';
@@ -97,7 +101,7 @@ class Colors {
 
     start() {
         if (this.counter < 1) {
-            this.colorFinal = [0, 255, 0]
+            this.colorFinal = [0, 200, 0]
             // this.colorInit = [0, 0, 0]
             // console.log(1234, this.colorFinal, this.colorInit)
         }
@@ -108,7 +112,7 @@ class Colors {
 
     end() {
         if (this.counter < 1) {
-            this.colorFinal = [0, 0, 255]
+            this.colorFinal = [0, 0, 245]
             // this.colorInit = [18, 18, 140]
         }
         this.counter = 2;

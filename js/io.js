@@ -11,8 +11,8 @@ class IO {
         this.timeForSearch = new Time(stepSize*10);
         // this.timeForPath = new Time();
         // this.method = new Testing1();
-        this.createMazeList();
-        this.firstRun = true;
+        // this.createMazeList();
+        this.firstRun = false;
     }
 
     clear() {
@@ -35,6 +35,7 @@ class IO {
 
     start() {
         // this.algo = new BreadthFirstSearch(io);
+        this.clear();
         this.algo = new BreadthFirstSearch(this);
         this.searching = true;
         this.path = null;
@@ -79,8 +80,14 @@ class IO {
     }
 
     createMaze() {
+        this.clear();
         this.createMazeList();
-        console.log(1212)
+        // console.log(1212)
+    }
+
+    clearMaze() {
+        this.clear();
+        this.maze.clear();
     }
 
     createWallsList() {

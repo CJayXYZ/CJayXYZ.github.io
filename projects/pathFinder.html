@@ -1,24 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Chrome, Firefox OS and Opera -->
     <meta name="theme-color" content="#101010">
     <!-- Windows Phone -->
     <meta name="msapplication-navbutton-color" content="#101010">
     <!-- iOS Safari -->
     <meta name="apple-mobile-web-app-status-bar-style" content="#101010">
     <title>Chandrajeet</title>
+    <link rel="stylesheet" href="../css/main.css">
 </head>
-<body style="background: black;">
-    <canvas id='pathFinder' 
-    style="border:1px solid #fff;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);">
 
-    </canvas>
-    <script src='../js/pathFinder.js'></script>
-</body>
-</html>
+<body>
+    <div class="header-container">
+        <div class="container">
+            <header>
+                <ul class="logo-header">
+                    <li><a href="#"><img class="logo" src="../images/logo.svg" alt="CJay.xyz"></a></li>
+                </ul>
+                <ul class="pages">
+                    <li class='unselected'><a href="../index.html">About</a></li>
+                    <li class='selected'><a href="../projects.html">Projects</a></li>
+                    <li class='unselected'><a href="../cv.html">CV</a></li>
+                </ul>
+            </header>
+        </div>
+    </div>
+
+    <div class='main-body-container'>
+        <div class="container">
+            <div class="main-body">
+                <div class="pathFinder">
+                    <!-- <canvas id="testLoop" style="border:1px solid white; width: 500px;"></canvas> -->
+                    <!-- <canvas id="testLoop" style="height: 300px; width: 600px;"></canvas> -->
+                    <canvas id="mainGrid"></canvas>
+                    <div class="controls-container">
+                        <div class="controls">
+                            <!-- <button class='button button1' onclick="window.location.href='/projects/test.html'">Create maze</button> -->
+                            <button class='button button1' onclick="io.createMaze();">Create maze</button>
+                            <button class='button button2' onclick="io.start();">Find path</button>
+                            <button class='button button3' onclick="io.clear();">Clear path</button>
+                            <!-- <button class='button button4' onclick="io.start();">Pause script</button> -->
+                            <button class='button button5' onclick="io.clearMaze();">Clear maze</button>
+                            <!-- <button class='button button6'>Reset</button> -->
+
+                        </div>
+                    </div>
+                    <!-- <canvas id="controls" style="border:1px solid white;"></canvas> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='footer-container'>
+        <div class="container">
+            <footer>
+                <ul>
+                    <!-- <li>Name: Chandrajeet Pratap Singh</li>
+                    <li>Call: (+91) 7503-713630</li>
+                    <li>Email: chandrajeet29@gmail.com</li> -->
+                    <li>Chandrajeet Pratap Singh</li>
+                    <li>(+91) 7503-713630</li>
+                    <li>chandrajeet29@gmail.com</li>
+                </ul>
+            </footer>
+        </div>
+    </div>
+    <script src='../js/controls.js'></script>
+    <script src='../js/io.js'></script>
+    <script src='../js/maths.js'></script>
+    <script src='../js/pillar.js'></script>
+    <script src='../js/wallsManager.js'></script>
+    <script src='../js/wall.js'></script>
+    <script src='../js/cubesManager.js'></script>
+    <script src='../js/grid.js'></script>
+    <script src='../js/colors.js'></script>
+    <script src='../js/time.js'></script>
+    <script src='../js/cube.js'></script>
+    <script src='../js/display.js'></script>
+</body>   
