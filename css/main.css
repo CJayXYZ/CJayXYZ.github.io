@@ -137,18 +137,37 @@ footer ul {
 .controls {
     display: grid;
     height: 100%;
+    width: 80px;
     
 }
 
 .controls .button {
     background-color: #0f0f0f;
-    border: none;
-    color: white;
-    margin: .5em 0.5em;
+    border: .2em solid  #0f0f0f;
+    color: #ccc;
+    margin: .25em .5em;
     /* height: 5em; */
 }
 
 .controls .button:hover {
-    background-color: rgb(80, 80, 80);
+    background-color: rgb(50, 50, 50);
+    border: .2em solid #fff;
+    font-weight: bolder;
+    color: #fff
+
     /* height: 5em; */
+    /* color: #000; */
+}
+
+.controls .button:disabled {
+    background-color: rgb(80, 80, 80);
+    border: .2em solid #aaa;
+    color: #afafaf;
+    font-weight: normal;
+    /* background-blend-mode: multiply; */
+    /* height: 5em; */
+}
+
+.controls .button:active {
+    background-color: rgb(80, 80, 80);
 }

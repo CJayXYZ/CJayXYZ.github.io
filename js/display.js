@@ -1,6 +1,9 @@
 const canvas = document.querySelector('#mainGrid');
 const ctx = canvas.getContext('2d');
-const ttt= canvas;
+const buttonCreateMaze = document.querySelector("#buttonCreateMaze");
+const buttonClearMaze = document.querySelector("#buttonClearMaze");
+const buttonFindPath = document.querySelector("#buttonFindPath");
+const buttonClearPath = document.querySelector("#buttonClearPath");
 let mainOffset = 50;
 // canvas.width = window.innerWidth - mainOffset;
 // canvas.height = window.innerHeight - mainOffset;
@@ -10,8 +13,8 @@ canvas.width = maxWidth;
 canvas.height = maxHeight;
 // console.log(canvas, ctx, maxWidth, maxHeight);
 let t = 0;
-let pix = 20;
-let pixLimit = [1e-1, 1e4];
+let pix = 25;
+let pixLimit = [5, 1000];
 let cubes = [];
 let shakeby = 5;
 let stepSize = 8;
@@ -32,12 +35,13 @@ let bfs = new BFS();
 
 let findPathBool = false;
 // let clearSearchCubes = false;
-let debugMode = false;
+let debugMode = true;
+debugMode = false;
 
 if (debugMode) {
-    pix = 75;
-    cubesManager.start.loc = [-1,-1];
-    cubesManager.end.loc = [1,1];
+    // pix = 75;
+    cubesManager.start.loc = [-1, -1];
+    cubesManager.end.loc = [1, 1];
 }
 
 function mainLoop() {
@@ -146,13 +150,13 @@ window.addEventListener("keyup", function (event) {
         io.clear();
     }
     else if (event.key === 'w') {
-        
+
         event.preventDefault();
         io.clear();
         io.createDefaultWalls();
     }
     else if (event.key === 'm') {
-        
+
         event.preventDefault();
         io.createMaze();
         // io.createDefaultWalls();

@@ -61,7 +61,8 @@ class Colors {
                 this._color = '#cc9900';
                 // this.colorFinal = [204, 153, 0];
                 
-                this.setEndColor([153, 120, 0]);
+                this.setEndColor([150, 110, 0]);
+                // this.colorFinal = [153, 120, 0];
                 // this.colorFinal = [0, 175, 245];
                 break;
             case 'path':
@@ -70,7 +71,7 @@ class Colors {
                 break;
             case 'wall':
                 this._color = '#ff0000';
-                this.setEndColor([180, 0, 0]);
+                this.setEndColor([150, 0, 0]);
                 // this.colorFinal = [180, 0, 0];
                 break;
             case 'test':
@@ -98,7 +99,7 @@ class Colors {
 
     start() {
         if (this.counter < 1) {
-            this.colorFinal = [0, 200, 0]
+            this.colorFinal = [0, 180, 0]
             // this.colorInit = [0, 0, 0]
             // console.log(1234, this.colorFinal, this.colorInit)
         }
@@ -178,7 +179,7 @@ class Colors {
     }
 
     setEndColor(color){
-        console.log(color);
+        // console.log(color);
         this.isColorMoving = true;
         // this.colorInit = [204, 153, 0];
         // this.colorMoving = [204, 153, 0];

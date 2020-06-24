@@ -71,9 +71,11 @@ class CubesManager {
     updateMasterCubes() {
         if (this.start.locChanged) {
             this.updateCubeMethodOld(this.start, this.masterCubeKeys);
+            // this.registerCube(this.start, this.masterCubeKeys, 'start');
         }
         if (this.end.locChanged) {
             this.updateCubeMethodOld(this.end, this.masterCubeKeys);
+            // this.registerCube(this.start, this.masterCubeKeys, 'end');
         }
     }
 
@@ -216,6 +218,13 @@ class CubesManager {
             case "wall":
                 keys = this.selectedWallKeys;
                 break;
+            case "end":
+                keys = this.masterCubeKeys;
+                break;
+            case "start":
+                keys = this.masterCubeKeys;
+                break;
+            // case "start":
         }
         if (keys) {
             keys.delete(key);
@@ -277,7 +286,7 @@ class CubesManager {
             // cube.fill.speed = 3;
             // cube.fill.color = '#000';
             // cube.cubeType = 'amazing';
-            cube.cubeType = 'wall';
+            // cube.cubeType = 'wall';
             this.registerCube(cube, this.selectedWallKeys, 'wall');
         }
         else {
@@ -289,7 +298,7 @@ class CubesManager {
 
     addWalls(col, row) {
         let cube = new Cube(col, row);
-        cube.cubeType = 'wall';
+        // cube.cubeType = 'wall';
         cube.fill.speed = 2;
         this.registerCube(cube, this.selectedWallKeys, 'wall');
     }

@@ -87,7 +87,7 @@ class Cube {
         if (this.text) {
             let x = this.x + this.cubeLength / 2;
             let y = this.y + this.cubeLength / 2;
-            let height = this.cubeLength / 5;
+            let height = this.cubeLength / 4.5;
             ctx.font = height + "px Consolas";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";

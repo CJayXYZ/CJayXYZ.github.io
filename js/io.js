@@ -31,6 +31,7 @@ class IO {
             pathList.pop();
         }
         this.path = pathList;
+        buttonFindPath.disabled = false;
     }
 
     start() {
@@ -39,6 +40,7 @@ class IO {
         this.algo = new BreadthFirstSearch(this);
         this.searching = true;
         this.path = null;
+        buttonFindPath.disabled = true;
     }
 
     run() {
@@ -57,8 +59,8 @@ class IO {
             }
         }
 
-        // if (this.wallList.list && ! this.searching) {
-        if (this.wallList.list) {
+        if (this.wallList.list && ! this.searching) {
+        // if (this.wallList.list) {
             if (this.wallList.length > 0) {
                 let loc = this.wallList.next();
                 if (loc) {
@@ -87,11 +89,13 @@ class IO {
         // this.clear();
         this.createMazeList();
         // console.log(1212)
+        buttonCreateMaze.disabled =true;
     }
 
     clearMaze() {
         this.clear();
         this.maze.clear();
+        buttonCreateMaze.disabled =false;
     }
 
     createWallsList() {
@@ -163,7 +167,7 @@ class IO {
 
     addSearchCube(loc) {
         let cube = new Cube(...loc);
-        cube.cubeType = 'searching';
+        // cube.cubeType = 'searching';
         cube.fill.speed = 5;
         loc = listToString(loc);
         // console.log(cubesManager.end.loc, loc)
@@ -193,7 +197,7 @@ class IO {
 
     addPathCube(loc) {
         let cube = new Cube(...loc);
-        cube.cubeType = 'path';
+        // cube.cubeType = 'path';
         // cube.fill.speed = 500;
         loc = listToString(loc);
         // if (!(loc in cubesManager.allCubes)) {

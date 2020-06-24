@@ -41,11 +41,11 @@
                     <div class="controls-container">
                         <div class="controls">
                             <!-- <button class='button button1' onclick="window.location.href='/projects/test.html'">Create maze</button> -->
-                            <button class='button button1' onclick="io.createMaze();">Create maze</button>
-                            <button class='button button2' onclick="io.start();">Find path</button>
-                            <button class='button button3' onclick="io.clear();">Clear path</button>
+                            <button class='button button2' id="buttonFindPath" onclick="io.start();">Find path</button>
+                            <button class='button button3' id="buttonClearPath" onclick="io.clear();">Clear path</button>
                             <!-- <button class='button button4' onclick="io.start();">Pause script</button> -->
-                            <button class='button button5' onclick="io.clearMaze();">Clear maze</button>
+                            <button class='button button1' id="buttonCreateMaze" onclick="io.createMaze();">Create maze</button>
+                            <button class='button button5' id="buttonClearMaze"   onclick="io.clearMaze();">Clear maze</button>
                             <!-- <button class='button button6'>Reset</button> -->
 
                         </div>
