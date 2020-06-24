@@ -8,7 +8,7 @@ class IO {
         this.maze = new Maze(cubesManager);
         this.wallList = new IterList();
         // this.timeForMaze = new Time();
-        this.timeForSearch = new Time(stepSize*10);
+        this.timeForSearch = new Time(stepSize * 10);
         // this.timeForPath = new Time();
         // this.method = new Testing1();
         // this.createMazeList();
@@ -27,7 +27,7 @@ class IO {
     stop(pathList = null) {
         this.searching = false;
         if (pathList) {
-            pathList.setTimer(stepSize*4);
+            pathList.setTimer(stepSize * 4);
             pathList.pop();
         }
         this.path = pathList;
@@ -57,19 +57,23 @@ class IO {
             }
         }
 
+        // if (this.wallList.list && ! this.searching) {
         if (this.wallList.list) {
             if (this.wallList.length > 0) {
                 let loc = this.wallList.next();
                 if (loc) {
                     cubesManager.addWalls(...loc);
                 }
-                else if (this.wallList.length === this.wallList.index){ 
+                else if (this.wallList.length === this.wallList.index) {
                     if (this.firstRun) {
                         this.firstRun = false;
                         this.start();
                     }
                 }
             }
+        }
+        else {
+            this.wallList.clear();
         }
 
 
@@ -80,7 +84,7 @@ class IO {
     }
 
     createMaze() {
-        this.clear();
+        // this.clear();
         this.createMazeList();
         // console.log(1212)
     }
@@ -99,7 +103,7 @@ class IO {
     createMazeList() {
         this.wallList.clear();
         this.wallList = this.maze.createMaze();
-        this.wallList.setTimer(stepSize*3);
+        this.wallList.setTimer(stepSize * 3);
         return this.wallList;
     }
 
@@ -164,7 +168,7 @@ class IO {
         loc = listToString(loc);
         // console.log(cubesManager.end.loc, loc)
         if (!(loc in cubesManager.allCubes)) {
-            cubesManager.registerCube(cube, cubesManager.searchCubeKeys);
+            cubesManager.registerCube(cube, cubesManager.searchCubeKeys, 'searching');
         }
     }
 
@@ -192,13 +196,13 @@ class IO {
         cube.cubeType = 'path';
         // cube.fill.speed = 500;
         loc = listToString(loc);
-        if (!(loc in cubesManager.allCubes)) {
-            cubesManager.registerCube(cube, cubesManager.pathCubeKeys);
-        }
-        else if ((loc in cubesManager.allCubes)) {
-            cubesManager.allCubes[loc].cubeType = 'path';
-            cubesManager.allCubes[loc].fill.speed = 10;
-        }
+        // if (!(loc in cubesManager.allCubes)) {
+        cubesManager.registerCube(cube, cubesManager.pathCubeKeys, 'path');
+        // }
+        // else if ((loc in cubesManager.allCubes)) {
+        // cubesManager.allCubes[loc].cubeType = 'path';
+        cubesManager.allCubes[loc].fill.speed = 10;
+        // }
     }
 
     deleteAllSearchCube() {

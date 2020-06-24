@@ -82,7 +82,7 @@ class Cube {
         this.text = text;
     }
 
-    showText() {
+    showCoordinates() {
         this.text = '(' + this.column + ',' + this.row + ')'
         if (this.text) {
             let x = this.x + this.cubeLength / 2;
@@ -106,7 +106,9 @@ class Cube {
             ctx.fillStyle = this.fill.color;
             // console.log(this.fill.color)
             ctx.fillRect(this.x, this.y, this.cubeLength, this.cubeLength);
-            // this.showmText()
+            if (debugMode) {
+                this.showCoordinates();
+            }
         }
     }
     move() {

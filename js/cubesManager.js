@@ -35,10 +35,10 @@ class CubesManager {
         // this.end = new Cube(endX, endY);
         this.start = new Cube(-11, -5);
         this.end = new Cube(11, 5);
-        this.start.cubeType = 'start';
-        this.end.cubeType = 'end';
-        this.registerCube(this.start, this.masterCubeKeys);
-        this.registerCube(this.end, this.masterCubeKeys);
+        // this.start.cubeType = 'start';
+        // this.end.cubeType = 'end';
+        this.registerCube(this.start, this.masterCubeKeys, 'start');
+        this.registerCube(this.end, this.masterCubeKeys, 'end');
         // console.log(startX,startY, endX, endY)
         // this.start.loc = [-4,2]
         // this.allCubes.push(this.start);
@@ -70,10 +70,10 @@ class CubesManager {
 
     updateMasterCubes() {
         if (this.start.locChanged) {
-            this.updateCube(this.start, this.masterCubeKeys);
+            this.updateCubeMethodOld(this.start, this.masterCubeKeys);
         }
         if (this.end.locChanged) {
-            this.updateCube(this.end, this.masterCubeKeys);
+            this.updateCubeMethodOld(this.end, this.masterCubeKeys);
         }
     }
 
@@ -183,25 +183,57 @@ class CubesManager {
         this.clicked(x, y)
     }
 
-    registerCube(cube, keys) {
+    registerCube(cube, keys, type = null) {
         let key = cube.name()
+        cube.cubeType = type;
         if (objectsAreSame(cube.loc, this.start.loc)) { }
         else if (objectsAreSame(cube.loc, this.end.loc)) { }
+        if (key in this.allCubes) {
+            let oldType = this.allCubes[key].cubeType
+            // console.log('register', key, type, this.allCubes[key].cubeType);
+            this.updateCube(key, keys, type, oldType);
+        }
         else {
             // if (key !== this.start.name() )
             keys.add(key);
             this.allCubes[key] = cube;
+
             // console.log(this.allCubes);
             // console.log(this.masterCubeKeys, this.searchCubeKeys)
         }
     }
 
-    deregisterCube(key, keys) {
-        keys.delete(key);
-        delete this.allCubes[key];
+    updateCube(key, newKeys, newType, oldType) {
+        let keys = null;
+        // console.log(oldType);
+        switch (oldType) {
+            case "path":
+                keys = this.pathCubeKeys;
+                break;
+            case "searching":
+                keys = this.searchCubeKeys;
+                break;
+            case "wall":
+                keys = this.selectedWallKeys;
+                break;
+        }
+        if (keys) {
+            keys.delete(key);
+            newKeys.add(key);
+            this.allCubes[key].cubeType = newType;
+            // this.deregisterCube(key, keys);
+            // this.registerCube()
+        }
     }
 
-    updateCube(cube, keys = null) {
+    deregisterCube(key, keys) {
+        keys.delete(key);
+        // console.log('deregister', key, "type", this.allCubes[key].type);
+        delete this.allCubes[key];
+        // console.log('deregister', key)
+    }
+
+    updateCubeMethodOld(cube, keys = null) {
         // console.log(this.allCubes);
         let oldKey = cube.lastLoc;
         let newKey = cube.name();
@@ -246,7 +278,7 @@ class CubesManager {
             // cube.fill.color = '#000';
             // cube.cubeType = 'amazing';
             cube.cubeType = 'wall';
-            this.registerCube(cube, this.selectedWallKeys);
+            this.registerCube(cube, this.selectedWallKeys, 'wall');
         }
         else {
             this.deregisterCube(key, this.selectedWallKeys);
@@ -258,8 +290,8 @@ class CubesManager {
     addWalls(col, row) {
         let cube = new Cube(col, row);
         cube.cubeType = 'wall';
-        cube.fill.speed =2;
-        this.registerCube(cube, this.selectedWallKeys);
+        cube.fill.speed = 2;
+        this.registerCube(cube, this.selectedWallKeys, 'wall');
     }
 
     deleteWalls(col, row) {
@@ -531,8 +563,8 @@ class Maze {
         // [col, row] = [0, 0];
         // this.wallList = this.createWalls.createBox();
         // this.wallList.push([col, row])
-        for (let i = 0; i<list.length; i++){
-            let [col,row] = list[i];
+        for (let i = 0; i < list.length; i++) {
+            let [col, row] = list[i];
             (this.expandWalls(col, row));
         }
         return this.wallList

@@ -9,7 +9,7 @@ class Colors {
         this.colorFinal = null;
         this.colorInit = [31, 31, 31];
         this.colorMoving = [31, 31, 31];
-        this.isColorMoving = true;
+        // this.isColorMoving = true;
         this.counter = 0;
         this.amazingSelector;
     }
@@ -60,21 +60,18 @@ class Colors {
             case 'searching':
                 this._color = '#cc9900';
                 // this.colorFinal = [204, 153, 0];
-                this.colorFinal = [153, 120, 0];
+                
+                this.setEndColor([153, 120, 0]);
                 // this.colorFinal = [0, 175, 245];
                 break;
             case 'path':
                 this._color = '#cccccc';
-                this.isColorMoving = true;
-                // this.colorInit = [204, 153, 0];
-                // this.colorMoving = [204, 153, 0];
-                this.colorInit = [153, 120, 0];
-                this.colorMoving = [153, 120, 0];
-                this.colorFinal = [204, 204, 204];
+                this.setEndColor([204, 204, 204]);
                 break;
             case 'wall':
                 this._color = '#ff0000';
-                this.colorFinal = [180, 0, 0];
+                this.setEndColor([180, 0, 0]);
+                // this.colorFinal = [180, 0, 0];
                 break;
             case 'test':
                 this._color = '#fff';
@@ -178,6 +175,23 @@ class Colors {
             }
             return '#f09'
         }
+    }
+
+    setEndColor(color){
+        console.log(color);
+        this.isColorMoving = true;
+        // this.colorInit = [204, 153, 0];
+        // this.colorMoving = [204, 153, 0];
+        if (this.colorFinal) {
+            this.colorInit = this.colorFinal;
+            this.colorMoving = this.colorFinal;
+            
+        }
+        else {
+            this.colorInit = [31, 31, 31];
+            this.colorMoving = [31, 31, 31];
+        }
+        this.colorFinal = color;
     }
 
     initToFinalColor() {

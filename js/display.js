@@ -1,5 +1,6 @@
 const canvas = document.querySelector('#mainGrid');
 const ctx = canvas.getContext('2d');
+const ttt= canvas;
 let mainOffset = 50;
 // canvas.width = window.innerWidth - mainOffset;
 // canvas.height = window.innerHeight - mainOffset;
@@ -10,7 +11,7 @@ canvas.height = maxHeight;
 // console.log(canvas, ctx, maxWidth, maxHeight);
 let t = 0;
 let pix = 20;
-let pixLimit = [1e-1, 1e4]
+let pixLimit = [1e-1, 1e4];
 let cubes = [];
 let shakeby = 5;
 let stepSize = 8;
@@ -31,6 +32,13 @@ let bfs = new BFS();
 
 let findPathBool = false;
 // let clearSearchCubes = false;
+let debugMode = false;
+
+if (debugMode) {
+    pix = 75;
+    cubesManager.start.loc = [-1,-1];
+    cubesManager.end.loc = [1,1];
+}
 
 function mainLoop() {
     ctx.clearRect(0, 0, 10000, 10000);
