@@ -566,7 +566,7 @@ class Maze {
 
     createMaze() {
         this.clear();
-        this.createBox();
+        // this.createBox();  // disabled on 20211223 4:38PM 
         let list = this.fixedWallLocList;
         // let [col, row] = this.getRandomLoc();
         // [col, row] = [0, 0];
