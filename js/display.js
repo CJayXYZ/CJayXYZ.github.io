@@ -13,7 +13,7 @@ canvas.width = maxWidth;
 canvas.height = maxHeight;
 console.log(canvas, ctx, maxWidth, maxHeight, maxWidth/maxHeight);
 let aspect_ratio = Math.round(maxWidth/maxHeight,0);
-let showNumberOfCols = 46;
+let showNumberOfCols = 44;
 console.log(aspect_ratio);
 let t = 0;
 // let pix = 20;
