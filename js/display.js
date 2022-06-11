@@ -11,9 +11,17 @@ let maxWidth = canvas.offsetWidth;
 let maxHeight = canvas.offsetHeight;
 canvas.width = maxWidth;
 canvas.height = maxHeight;
-// console.log(canvas, ctx, maxWidth, maxHeight);
+console.log(canvas, ctx, maxWidth, maxHeight, maxWidth/maxHeight);
+let aspect_ratio = Math.round(maxWidth/maxHeight,0);
+let showNumberOfCols = 46;
+console.log(aspect_ratio);
 let t = 0;
-let pix = 25;
+// let pix = 20;
+let pix = Math.round(maxWidth/showNumberOfCols)-1;
+
+let maxPossibleColumns = Math.round(maxWidth/pix);
+let maxPossibleRows = Math.round(maxHeight/pix);
+
 let pixLimit = [5, 1000];
 let cubes = [];
 let shakeby = 5;
@@ -76,7 +84,7 @@ function update() {
     canvas.height = maxHeight;
     grid.maxHeight = canvas.height;
     grid.maxWidth = canvas.width;
-    console.log(grid.maxWidth, grid.maxHeight)
+    console.log(grid.maxWidth, grid.maxHeight, grid.maxWidth/grid.maxHeight)
 }
 
 

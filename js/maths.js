@@ -488,3 +488,17 @@ class Combination {
         }
     } aq
 }
+
+
+function oddNumber(number) {
+    number = Math.round(number, 0);
+    if (number%2 == 0) {
+        if (number>0) {
+            number = number - 1
+        }
+        else {
+            number = number + 1
+        }
+    }
+    return number
+}

@@ -35,6 +35,10 @@ class CubesManager {
         // this.end = new Cube(endX, endY);
         this.start = new Cube(-11, -5);
         this.end = new Cube(11, 5);
+        this.start = new Cube(oddNumber(-maxPossibleColumns/2+6), 
+                                oddNumber(-maxPossibleRows/2+6));
+        this.end = new Cube(oddNumber(maxPossibleColumns/2-6), 
+                            oddNumber(maxPossibleRows/2-5));
         // this.start.cubeType = 'start';
         // this.end.cubeType = 'end';
         this.registerCube(this.start, this.masterCubeKeys, 'start');
@@ -518,7 +522,20 @@ class Maze {
     }
 
     isValid(col, row) {
-        return !(this.isEnd(col, row) || this.isStart(col, row) || this.wallList.has([col, row]));
+        return !(
+            this.isEnd(col, row) 
+            || this.isStart(col, row) 
+            || this.wallList.has([col, row])
+            || !this.blockVisible()
+        );
+    }
+
+    blockVisible() {
+        // console.log(this.wallList.keyList)
+        // console.log(this.startLoc, this.endLoc)
+        let algo = new BFS_assist(this.startLoc, this.endLoc, this.wallList)
+        let bool = algo.isPathPossible()
+        return bool;
     }
 
     getRandomLoc() {
@@ -566,7 +583,7 @@ class Maze {
 
     createMaze() {
         this.clear();
-        // this.createBox();  // disabled on 20211223 4:38PM 
+        this.createBox();  // disabled on 20211223 4:38PM 
         let list = this.fixedWallLocList;
         // let [col, row] = this.getRandomLoc();
         // [col, row] = [0, 0];
@@ -604,7 +621,7 @@ class Maze {
         //     side = this.getRandomSide();
         // }
         // return wallList.list;
-        return this.recursiveWall(col, row, wallList);
+        return this.recursiveWall(col, row, this.wallList);
     }
 
     recursiveWall(col, row, wallList, prevSide = null) {

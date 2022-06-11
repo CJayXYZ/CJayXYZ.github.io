@@ -697,3 +697,87 @@ class BFS {
 
     }
 }
+
+class BFS_assist {
+    constructor(start, end, wallList) {
+        this.start = start;
+        [this.startCol, this.startRow] = [start[0], start[1]];
+        [this.endCol, this.endRow] = [end[0], end[1]];
+        this.wallList = wallList;
+        this.traversed = new UniqueIterList();
+        this.traversed.push(start)
+        this.path = "";
+        this.moves = ["L", "U", "R", "D"];
+    }
+
+    isPathPossible() {
+        // console.log(this.traversed.keyList);
+        let counter = 0;
+        let pathFound = false;
+        let searching = true;
+        let queue = new Queue();
+        queue.enqueue("");
+        while (counter < 1000){
+            // console.log(queue.items)
+            if ((queue.items.length)==0){
+                break;
+            }
+            let currPath = queue.dequeue();
+            for (let i in this.moves) {
+                let newPath = currPath + this.moves[i];
+                let newLoc = this.finalLoc(this.startCol, this.startRow, newPath);
+                if (this.isValidMove(newLoc)){
+                    this.traversed.push(newLoc);
+                    queue.enqueue(newPath);
+                }
+                if (this.isEnd(newLoc)) {
+                    searching = false
+                    pathFound = true
+                    this.path = newPath
+                    // console.log('THE PATH IS: ', this.path)
+                    break;
+                }
+                // console.log(i)
+                
+            }
+            if (searching == false) { break;}
+            // break;
+            counter = counter +1;
+        }
+        return pathFound
+    }
+
+    isValidMove(newLoc) {
+        return (!this.wallList.has(newLoc)) && (!this.traversed.has(newLoc));
+    }
+
+    isEnd(newLoc) {
+        return (newLoc[0] == this.endCol) && (newLoc[1] == this.endRow)
+    }
+
+    newLoc(col, row, side) {
+        switch (side) {
+            case 'R':
+                col = col + 1;
+                break;
+            case 'L':
+                col = col - 1;
+                break;
+            case 'D':
+                row = row + 1;
+                break;
+            case 'U':
+                row = row - 1;
+                break;
+        }
+        return [col, row];
+    }
+
+    finalLoc(col, row, path) {
+        for (let move of path) {
+            [col, row] = this.newLoc(col, row, move);
+        }
+        return [col, row];
+    }
+
+}
