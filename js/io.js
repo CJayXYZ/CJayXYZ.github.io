@@ -717,7 +717,7 @@ class BFS_assist {
         let searching = true;
         let queue = new Queue();
         queue.enqueue("");
-        while (counter < 1000){
+        while (counter < 10000){
             // console.log(queue.items)
             if ((queue.items.length)==0){
                 break;

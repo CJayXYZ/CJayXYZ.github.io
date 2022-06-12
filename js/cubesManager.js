@@ -525,7 +525,7 @@ class Maze {
         return !(
             this.isEnd(col, row) 
             || this.isStart(col, row) 
-            || this.wallList.has([col, row])
+            // || this.wallList.has([col, row])
             || !this.blockVisible()
         );
     }
@@ -641,6 +641,7 @@ class Maze {
         let bool = wallList.push([col, row]);
         this.wallList.push([col, row]);
         // this.parent.addWalls(col, row);
+        // bool = true; // added to expand beyond a wall
         return bool;
     }
 
