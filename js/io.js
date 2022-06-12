@@ -107,7 +107,7 @@ class IO {
     createMazeList() {
         this.wallList.clear();
         this.wallList = this.maze.createMaze();
-        this.wallList.setTimer(stepSize * 3);
+        this.wallList.setTimer(stepSize * 1);
         return this.wallList;
     }
 
