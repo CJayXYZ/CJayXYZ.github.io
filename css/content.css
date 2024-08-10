@@ -1,5 +1,22 @@
 .content-div {
-    color: white;
-    /* border: 1px;
+  color: white;
+  /* border: 1px;
     border: solid white */
+}
+
+.card {
+    color: white;
+    display: flex;
+    height: 250px;
+    /* border: 1px;
+    border: solid white; */
+}
+
+.card :hover{
+    /* color: rgb(171, 40, 40); */
+    /* display: flex; */
+    /* display: flex; */
+    /* border: 1px; */
+    /* border: solid rgb(20, 12, 12); */
+    
 }
